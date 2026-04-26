@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" fill="none">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7c3aed" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#4f46e5" stop-opacity="0.92"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(520 120) rotate(90) scale(180 260)">
+      <stop stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="stone" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7f7ff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#e8e7ff" stop-opacity="0.88"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="800" height="520" fill="url(#sky)"/>
+  <rect x="0" y="0" width="800" height="520" fill="url(#glow)"/>
+
+  <!-- soft clouds -->
+  <g opacity="0.18" fill="#ffffff">
+    <path d="M100 140c18-18 50-18 68 0c10-10 28-10 38 0c22-10 54 6 54 30c0 22-18 30-38 30H120c-26 0-44-12-44-32c0-12 8-22 24-28z"/>
+    <path d="M560 90c18-18 52-18 70 0c10-10 28-10 38 0c22-10 54 6 54 30c0 22-18 30-38 30H580c-26 0-44-12-44-32c0-12 8-22 24-28z"/>
+  </g>
+
+  <!-- silhouette base -->
+  <g transform="translate(0,40)">
+    <!-- garden line -->
+    <rect x="0" y="400" width="800" height="80" fill="#0b0b16" opacity="0.12"/>
+
+    <!-- main building (stylized Vidhana Soudha-ish) -->
+    <g>
+      <rect x="140" y="270" width="520" height="150" rx="18" fill="url(#stone)" opacity="0.96"/>
+      <rect x="170" y="250" width="460" height="30" rx="12" fill="#ffffff" opacity="0.45"/>
+
+      <!-- pillars -->
+      <g opacity="0.55">
+        <rect x="195" y="295" width="22" height="120" rx="10" fill="#ffffff"/>
+        <rect x="240" y="295" width="22" height="120" rx="10" fill="#ffffff"/>
+        <rect x="285" y="295" width="22" height="120" rx="10" fill="#ffffff"/>
+        <rect x="330" y="295" width="22" height="120" rx="10" fill="#ffffff"/>
+        <rect x="375" y="295" width="22" height="120" rx="10" fill="#ffffff"/>
+        <rect x="420" y="295" width="22" height="120" rx="10" fill="#ffffff"/>
+        <rect x="465" y="295" width="22" height="120" rx="10" fill="#ffffff"/>
+        <rect x="510" y="295" width="22" height="120" rx="10" fill="#ffffff"/>
+        <rect x="555" y="295" width="22" height="120" rx="10" fill="#ffffff"/>
+      </g>
+
+      <!-- central dome -->
+      <path d="M400 170c55 0 98 42 98 96v16H302v-16c0-54 43-96 98-96z" fill="#ffffff" opacity="0.55"/>
+      <path d="M400 150c26 0 46 20 46 46v14H354v-14c0-26 20-46 46-46z" fill="#ffffff" opacity="0.55"/>
+      <rect x="388" y="135" width="24" height="18" rx="8" fill="#ffffff" opacity="0.6"/>
+
+      <!-- side domes -->
+      <path d="M255 205c22 0 40 18 40 42v8h-80v-8c0-24 18-42 40-42z" fill="#ffffff" opacity="0.45"/>
+      <path d="M545 205c22 0 40 18 40 42v8h-80v-8c0-24 18-42 40-42z" fill="#ffffff" opacity="0.45"/>
+
+      <!-- small sparkle stars -->
+      <g opacity="0.55" fill="#fff">
+        <path d="M650 210l8 14l14 8l-14 8l-8 14l-8-14l-14-8l14-8l8-14z" opacity="0.55"/>
+        <path d="M120 240l6 10l10 6l-10 6l-6 10l-6-10l-10-6l10-6l6-10z" opacity="0.35"/>
+      </g>
+    </g>
+  </g>
+</svg>
+

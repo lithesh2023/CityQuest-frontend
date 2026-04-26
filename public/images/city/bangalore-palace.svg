@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6d28d9" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#4f46e5" stop-opacity="0.92"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(260 120) rotate(90) scale(210 280)">
+      <stop stop-color="#ffffff" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="castle" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.92"/>
+      <stop offset="1" stop-color="#efeefe" stop-opacity="0.85"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="520" fill="url(#bg)"/>
+  <rect width="800" height="520" fill="url(#shine)"/>
+
+  <g transform="translate(0,28)">
+    <!-- ground -->
+    <rect x="0" y="420" width="800" height="72" fill="#0b0b16" opacity="0.10"/>
+
+    <!-- main keep -->
+    <rect x="230" y="250" width="340" height="190" rx="18" fill="url(#castle)"/>
+    <rect x="210" y="285" width="380" height="155" rx="18" fill="#ffffff" opacity="0.35"/>
+
+    <!-- towers -->
+    <g fill="url(#castle)">
+      <rect x="150" y="270" width="90" height="170" rx="16"/>
+      <rect x="560" y="270" width="90" height="170" rx="16"/>
+    </g>
+
+    <!-- roofs -->
+    <g opacity="0.55" fill="#ffffff">
+      <path d="M150 270l45-50l45 50H150z"/>
+      <path d="M560 270l45-50l45 50H560z"/>
+      <path d="M230 250l170-90l170 90H230z" opacity="0.40"/>
+    </g>
+
+    <!-- windows -->
+    <g opacity="0.50" fill="#6d28d9">
+      <rect x="270" y="310" width="34" height="52" rx="16"/>
+      <rect x="330" y="310" width="34" height="52" rx="16"/>
+      <rect x="390" y="310" width="34" height="52" rx="16"/>
+      <rect x="450" y="310" width="34" height="52" rx="16"/>
+      <rect x="510" y="310" width="34" height="52" rx="16"/>
+    </g>
+
+    <g opacity="0.50" fill="#6d28d9">
+      <rect x="175" y="320" width="26" height="42" rx="13"/>
+      <rect x="598" y="320" width="26" height="42" rx="13"/>
+    </g>
+
+    <!-- small stars -->
+    <g opacity="0.45" fill="#ffffff">
+      <path d="M660 190l8 14l14 8l-14 8l-8 14l-8-14l-14-8l14-8l8-14z"/>
+      <path d="M120 220l6 10l10 6l-10 6l-6 10l-6-10l-10-6l10-6l6-10z" opacity="0.35"/>
+    </g>
+  </g>
+</svg>
+
