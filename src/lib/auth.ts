@@ -1,6 +1,16 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+function adminEmails() {
+  const fromEnv = process.env.ADMIN_EMAILS ?? "";
+  const emails = fromEnv
+    .split(",")
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  if (emails.length) return emails;
+  return ["test@cityquest.app"];
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -23,10 +33,12 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
+        const isAdmin = adminEmails().includes(TEST_EMAIL);
         return {
           id: TEST_EMAIL,
           name: "Test Explorer",
           email: TEST_EMAIL,
+          role: isAdmin ? "admin" : "user",
         };
       },
     }),
@@ -35,6 +47,19 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET ?? "dev-secret-change-me",
   pages: {
     signIn: "/login",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = (user as { role?: string }).role ?? "user";
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      (session as unknown as { role?: string }).role =
+        (token as unknown as { role?: string }).role ?? "user";
+      return session;
+    },
   },
 };
 

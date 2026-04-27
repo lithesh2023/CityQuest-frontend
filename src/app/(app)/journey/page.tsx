@@ -1,7 +1,8 @@
-import { dummyLevels } from "@/lib/journeyDummy";
 import { JourneyTimeline } from "@/components/JourneyTimeline";
+import { readJourneyConfig } from "@/lib/journeyConfigStore";
 
-export default function JourneyPage() {
-  return <JourneyTimeline levels={dummyLevels} />;
+export default async function JourneyPage() {
+  const cfg = await readJourneyConfig();
+  return <JourneyTimeline stages={cfg.stages} />;
 }
 
