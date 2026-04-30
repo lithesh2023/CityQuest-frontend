@@ -1,8 +1,6 @@
-import { JourneyTimeline } from "@/components/JourneyTimeline";
-import { readJourneyConfig } from "@/lib/journeyConfigStore";
+import JourneyClient from "./JourneyClient";
 
 export default async function JourneyPage() {
-  const cfg = await readJourneyConfig();
-  return <JourneyTimeline stages={cfg.stages} />;
+  return <JourneyClient />;
 }
 

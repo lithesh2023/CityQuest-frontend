@@ -36,12 +36,14 @@ export async function middleware(req: NextRequest) {
   }
 
   if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    const role = String((token as unknown as { role?: string }).role ?? "");
     const email = String(token.email ?? "").toLowerCase();
-    if (!email || !adminEmails().includes(email)) {
-      const url = req.nextUrl.clone();
-      url.pathname = "/home";
-      url.searchParams.set("error", "not_admin");
-      return NextResponse.redirect(url);
+    const isAdmin = role === "admin" || (!!email && adminEmails().includes(email));
+    if (!isAdmin) {
+      return new NextResponse("Unauthorized", {
+        status: 403,
+        headers: { "content-type": "text/plain; charset=utf-8" },
+      });
     }
   }
 

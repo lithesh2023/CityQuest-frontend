@@ -1,0 +1,243 @@
+{
+  "version": 1,
+  "source": "Derived from src/lib/journeyData.ts (dummyStages) and src/lib/journeyDummy.ts (dummyLevels). Use for database seed scripts.",
+  "journeys": [
+    {
+      "id": "stranger",
+      "title": "Stranger",
+      "description": "Weeks 1 - 8",
+      "weeks_label": "Weeks 1 - 8",
+      "accent": "green",
+      "ui_status": "completed",
+      "levels": [
+        {
+          "id": "stranger-l1",
+          "order": 1,
+          "missions": [
+            { "id": "s1l1-food", "title": "Benne Dosa at CTR.", "category": "food", "xp": 100 },
+            { "id": "s1l1-history", "title": "Tour Bangalore Fort.", "category": "history", "xp": 100 },
+            { "id": "s1l1-activity", "title": "End-to-End Metro Ride.", "category": "activity", "xp": 100 },
+            { "id": "s1l1-experience", "title": "Browse Blossom Book House.", "category": "experience", "xp": 100 },
+            { "id": "s1l1-dynamic", "title": "Avarekai Mela Visit.", "category": "dynamic", "xp": 100 },
+            { "id": "s1l1-sponsored", "title": "10% Off Maverick Coffee.", "category": "sponsored", "xp": 150 }
+          ]
+        },
+        {
+          "id": "stranger-l2",
+          "order": 2,
+          "missions": [
+            { "id": "s1l2-food", "title": "Filter Coffee at Brahmin's.", "category": "food", "xp": 100 },
+            { "id": "s1l2-history", "title": "Vidhana Soudha (Night).", "category": "history", "xp": 100 },
+            { "id": "s1l2-activity", "title": "Cubbon Park Dog Park.", "category": "activity", "xp": 100 },
+            { "id": "s1l2-experience", "title": "Gandhi Bazaar Flowers.", "category": "experience", "xp": 100 },
+            { "id": "s1l2-dynamic", "title": "Lalbagh Flower Show.", "category": "dynamic", "xp": 100 },
+            { "id": "s1l2-sponsored", "title": "Free Drink at Toit.", "category": "sponsored", "xp": 150 }
+          ]
+        },
+        {
+          "id": "stranger-l3",
+          "order": 3,
+          "missions": [
+            { "id": "s1l3-food", "title": "Shivaji Military Hotel.", "category": "food", "xp": 100 },
+            { "id": "s1l3-history", "title": "Bull Temple Monolith.", "category": "history", "xp": 100 },
+            { "id": "s1l3-activity", "title": "Sankey Tank Sunset.", "category": "activity", "xp": 100 },
+            { "id": "s1l3-experience", "title": "Ranga Shankara Play.", "category": "experience", "xp": 100 },
+            { "id": "s1l3-dynamic", "title": "Chitra Santhe Fair.", "category": "dynamic", "xp": 100 },
+            { "id": "s1l3-sponsored", "title": "10% Off Bangalore Cafe.", "category": "sponsored", "xp": 150 }
+          ]
+        },
+        {
+          "id": "stranger-l4",
+          "order": 4,
+          "missions": [
+            { "id": "s1l4-food", "title": "VV Puram Street Food.", "category": "food", "xp": 100 },
+            { "id": "s1l4-history", "title": "NGMA Art Gallery.", "category": "history", "xp": 100 },
+            { "id": "s1l4-activity", "title": "100ft Rd Walk.", "category": "activity", "xp": 100 },
+            { "id": "s1l4-experience", "title": "Single-Screen Cinema.", "category": "experience", "xp": 100 },
+            { "id": "s1l4-dynamic", "title": "IPL Match Screening.", "category": "dynamic", "xp": 100 },
+            { "id": "s1l4-sponsored", "title": "15% Off EatConfetti.", "category": "sponsored", "xp": 150 }
+          ]
+        },
+        {
+          "id": "stranger-l5",
+          "order": 5,
+          "missions": [
+            { "id": "s1l5-food", "title": "Corner House DBC.", "category": "food", "xp": 100 },
+            { "id": "s1l5-history", "title": "Someshwara Inscriptions.", "category": "history", "xp": 100 },
+            { "id": "s1l5-activity", "title": "Richards Town Bungalows.", "category": "activity", "xp": 100 },
+            { "id": "s1l5-experience", "title": "Live Jazz Night.", "category": "experience", "xp": 100 },
+            { "id": "s1l5-dynamic", "title": "Bangalore Lit Fest.", "category": "dynamic", "xp": 100 },
+            { "id": "s1l5-sponsored", "title": "Deal at MAP Museum.", "category": "sponsored", "xp": 150 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visitor",
+      "title": "Visitor",
+      "description": "Weeks 9 - 20",
+      "weeks_label": "Weeks 9 - 20",
+      "accent": "amber",
+      "ui_status": "in_progress",
+      "levels": [
+        {
+          "id": "visitor-l1",
+          "order": 1,
+          "missions": [
+            { "id": "visitor-l1-food", "title": "Coming soon", "category": "food", "xp": 100 },
+            { "id": "visitor-l1-history", "title": "Coming soon", "category": "history", "xp": 100 },
+            { "id": "visitor-l1-activity", "title": "Coming soon", "category": "activity", "xp": 100 },
+            { "id": "visitor-l1-experience", "title": "Coming soon", "category": "experience", "xp": 100 },
+            { "id": "visitor-l1-dynamic", "title": "Coming soon", "category": "dynamic", "xp": 100 },
+            { "id": "visitor-l1-sponsored", "title": "Coming soon", "category": "sponsored", "xp": 150 }
+          ]
+        },
+        {
+          "id": "visitor-l2",
+          "order": 2,
+          "missions": [
+            { "id": "visitor-l2-food", "title": "Coming soon", "category": "food", "xp": 100 },
+            { "id": "visitor-l2-history", "title": "Coming soon", "category": "history", "xp": 100 },
+            { "id": "visitor-l2-activity", "title": "Coming soon", "category": "activity", "xp": 100 },
+            { "id": "visitor-l2-experience", "title": "Coming soon", "category": "experience", "xp": 100 },
+            { "id": "visitor-l2-dynamic", "title": "Coming soon", "category": "dynamic", "xp": 100 },
+            { "id": "visitor-l2-sponsored", "title": "Coming soon", "category": "sponsored", "xp": 150 }
+          ]
+        },
+        {
+          "id": "visitor-l3",
+          "order": 3,
+          "missions": [
+            { "id": "visitor-l3-food", "title": "Coming soon", "category": "food", "xp": 100 },
+            { "id": "visitor-l3-history", "title": "Coming soon", "category": "history", "xp": 100 },
+            { "id": "visitor-l3-activity", "title": "Coming soon", "category": "activity", "xp": 100 },
+            { "id": "visitor-l3-experience", "title": "Coming soon", "category": "experience", "xp": 100 },
+            { "id": "visitor-l3-dynamic", "title": "Coming soon", "category": "dynamic", "xp": 100 },
+            { "id": "visitor-l3-sponsored", "title": "Coming soon", "category": "sponsored", "xp": 150 }
+          ]
+        },
+        {
+          "id": "visitor-l4",
+          "order": 4,
+          "missions": [
+            { "id": "visitor-l4-food", "title": "Coming soon", "category": "food", "xp": 100 },
+            { "id": "visitor-l4-history", "title": "Coming soon", "category": "history", "xp": 100 },
+            { "id": "visitor-l4-activity", "title": "Coming soon", "category": "activity", "xp": 100 },
+            { "id": "visitor-l4-experience", "title": "Coming soon", "category": "experience", "xp": 100 },
+            { "id": "visitor-l4-dynamic", "title": "Coming soon", "category": "dynamic", "xp": 100 },
+            { "id": "visitor-l4-sponsored", "title": "Coming soon", "category": "sponsored", "xp": 150 }
+          ]
+        },
+        {
+          "id": "visitor-l5",
+          "order": 5,
+          "missions": [
+            { "id": "visitor-l5-food", "title": "Coming soon", "category": "food", "xp": 100 },
+            { "id": "visitor-l5-history", "title": "Coming soon", "category": "history", "xp": 100 },
+            { "id": "visitor-l5-activity", "title": "Coming soon", "category": "activity", "xp": 100 },
+            { "id": "visitor-l5-experience", "title": "Coming soon", "category": "experience", "xp": 100 },
+            { "id": "visitor-l5-dynamic", "title": "Coming soon", "category": "dynamic", "xp": 100 },
+            { "id": "visitor-l5-sponsored", "title": "Coming soon", "category": "sponsored", "xp": 150 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "explorer",
+      "title": "Explorer",
+      "description": "Weeks 21 - 36",
+      "weeks_label": "Weeks 21 - 36",
+      "accent": "purple",
+      "ui_status": "locked",
+      "levels": [
+        { "id": "explorer-l1", "order": 1, "missions": [{ "id": "explorer-l1-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "explorer-l1-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "explorer-l1-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "explorer-l1-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "explorer-l1-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "explorer-l1-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "explorer-l2", "order": 2, "missions": [{ "id": "explorer-l2-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "explorer-l2-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "explorer-l2-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "explorer-l2-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "explorer-l2-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "explorer-l2-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "explorer-l3", "order": 3, "missions": [{ "id": "explorer-l3-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "explorer-l3-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "explorer-l3-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "explorer-l3-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "explorer-l3-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "explorer-l3-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "explorer-l4", "order": 4, "missions": [{ "id": "explorer-l4-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "explorer-l4-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "explorer-l4-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "explorer-l4-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "explorer-l4-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "explorer-l4-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "explorer-l5", "order": 5, "missions": [{ "id": "explorer-l5-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "explorer-l5-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "explorer-l5-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "explorer-l5-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "explorer-l5-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "explorer-l5-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] }
+      ]
+    },
+    {
+      "id": "insider",
+      "title": "Insider",
+      "description": "Weeks 37 - 44",
+      "weeks_label": "Weeks 37 - 44",
+      "accent": "purple",
+      "ui_status": "locked",
+      "levels": [
+        { "id": "insider-l1", "order": 1, "missions": [{ "id": "insider-l1-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "insider-l1-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "insider-l1-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "insider-l1-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "insider-l1-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "insider-l1-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "insider-l2", "order": 2, "missions": [{ "id": "insider-l2-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "insider-l2-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "insider-l2-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "insider-l2-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "insider-l2-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "insider-l2-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "insider-l3", "order": 3, "missions": [{ "id": "insider-l3-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "insider-l3-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "insider-l3-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "insider-l3-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "insider-l3-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "insider-l3-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "insider-l4", "order": 4, "missions": [{ "id": "insider-l4-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "insider-l4-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "insider-l4-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "insider-l4-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "insider-l4-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "insider-l4-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "insider-l5", "order": 5, "missions": [{ "id": "insider-l5-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "insider-l5-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "insider-l5-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "insider-l5-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "insider-l5-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "insider-l5-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] }
+      ]
+    },
+    {
+      "id": "bangalorean",
+      "title": "Bangalorean",
+      "description": "Weeks 45 - 52",
+      "weeks_label": "Weeks 45 - 52",
+      "accent": "purple",
+      "ui_status": "locked",
+      "levels": [
+        { "id": "bangalorean-l1", "order": 1, "missions": [{ "id": "bangalorean-l1-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "bangalorean-l1-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "bangalorean-l1-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "bangalorean-l1-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "bangalorean-l1-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "bangalorean-l1-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "bangalorean-l2", "order": 2, "missions": [{ "id": "bangalorean-l2-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "bangalorean-l2-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "bangalorean-l2-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "bangalorean-l2-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "bangalorean-l2-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "bangalorean-l2-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "bangalorean-l3", "order": 3, "missions": [{ "id": "bangalorean-l3-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "bangalorean-l3-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "bangalorean-l3-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "bangalorean-l3-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "bangalorean-l3-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "bangalorean-l3-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "bangalorean-l4", "order": 4, "missions": [{ "id": "bangalorean-l4-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "bangalorean-l4-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "bangalorean-l4-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "bangalorean-l4-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "bangalorean-l4-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "bangalorean-l4-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] },
+        { "id": "bangalorean-l5", "order": 5, "missions": [{ "id": "bangalorean-l5-food", "title": "Locked", "category": "food", "xp": 100 }, { "id": "bangalorean-l5-history", "title": "Locked", "category": "history", "xp": 100 }, { "id": "bangalorean-l5-activity", "title": "Locked", "category": "activity", "xp": 100 }, { "id": "bangalorean-l5-experience", "title": "Locked", "category": "experience", "xp": 100 }, { "id": "bangalorean-l5-dynamic", "title": "Locked", "category": "dynamic", "xp": 100 }, { "id": "bangalorean-l5-sponsored", "title": "Locked", "category": "sponsored", "xp": 150 }] }
+      ]
+    }
+  ],
+  "week_style_levels": [
+    {
+      "id": "lvl-1",
+      "level_number": 1,
+      "title": "Stranger",
+      "week_range_label": "Weeks 1 - 8",
+      "accent": "green",
+      "ui_status": "completed",
+      "missions": [
+        { "id": "t1", "title": "Take your first Metro ride", "description": "Ride end-to-end and snap a selfie outside the station.", "xp": 100, "type": "activity" },
+        { "id": "t2", "title": "Benne Dosa at CTR", "description": "Try a Bengaluru classic and rate it.", "xp": 100, "type": "food" },
+        { "id": "t3", "title": "Tour Bangalore Fort", "description": "Walk the ruins and learn one story to share.", "xp": 100, "type": "history" },
+        { "id": "t4", "title": "Browse Blossom Book House", "description": "Pick a local author or a city-themed book.", "xp": 100, "type": "culture" },
+        { "id": "t5", "title": "Avarekai Mela visit (Dynamic)", "description": "Catch a seasonal event and collect points.", "xp": 150, "type": "dynamic" },
+        { "id": "t6", "title": "10% Off Maverick Coffee (Sponsored)", "description": "Redeem a partner offer to support the ecosystem.", "xp": 150, "type": "sponsored" }
+      ]
+    },
+    {
+      "id": "lvl-2",
+      "level_number": 2,
+      "title": "Visitor",
+      "week_range_label": "Weeks 9 - 20",
+      "accent": "amber",
+      "ui_status": "in_progress",
+      "missions": [
+        { "id": "t7", "title": "Use BMTC bus to travel", "description": "Take any bus route, note one new stop name.", "xp": 100, "type": "activity" },
+        { "id": "t8", "title": "Find and use a Namma Cycle station", "description": "Unlock a cycle and ride for at least 10 minutes.", "xp": 100, "type": "activity" },
+        { "id": "t9", "title": "Navigate peak hour traffic", "description": "Plan a smart route and save 10 minutes.", "xp": 100, "type": "culture" },
+        { "id": "t10", "title": "Walk a complete 3 km in your area", "description": "Discover one shortcut or hidden lane.", "xp": 100, "type": "activity" },
+        { "id": "t11", "title": "Weekend market stroll", "description": "Explore a local market and try one snack.", "xp": 100, "type": "food" },
+        { "id": "t12", "title": "Partner deal: local cafe", "description": "Redeem a discount and post your collage.", "xp": 150, "type": "sponsored" }
+      ]
+    },
+    {
+      "id": "lvl-3",
+      "level_number": 3,
+      "title": "Explorer",
+      "week_range_label": "Weeks 21 - 36",
+      "accent": "purple",
+      "ui_status": "locked",
+      "missions": []
+    },
+    {
+      "id": "lvl-4",
+      "level_number": 4,
+      "title": "Insider",
+      "week_range_label": "Weeks 37 - 44",
+      "accent": "purple",
+      "ui_status": "locked",
+      "missions": []
+    }
+  ]
+}

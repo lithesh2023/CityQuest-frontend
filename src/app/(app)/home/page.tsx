@@ -3,8 +3,8 @@ import Image from "next/image";
 import { getServerSession } from "next-auth";
 import { Bell } from "lucide-react";
 import { authOptions } from "@/lib/auth";
-import { dummyLevels } from "@/lib/journeyDummy";
 import { AutoRickshawFloat } from "@/components/AutoRickshawFloat";
+import { getJourney, getLevel, getMyLevelProgress, getMyProgressSummary, listJourneys } from "@/lib/api/cityquest";
 
 function cityArtForLevel(levelNumber: number) {
   const options = [
@@ -37,31 +37,84 @@ function ProgressDots({ completed, total }: { completed: number; total: number }
 export default async function HomeDashboardPage() {
   const session = await getServerSession(authOptions);
 
-  const current =
-    dummyLevels.find((l) => l.status === "in_progress") ??
-    dummyLevels.find((l) => l.status !== "locked") ??
-    dummyLevels[0];
+  let journeyId: string | null = null;
+  let journeyTitle = "Your Journey";
+  let journeyDescription = "Continue exploring.";
+
+  let levelOrder = 1;
+  let levelTitle = `Level ${levelOrder}`;
+  let levelProgressCompleted = 0;
+  let levelProgressTotal = 0;
+
+  let progressSummary: Awaited<ReturnType<typeof getMyProgressSummary>> | null = null;
+
+  try {
+    const listed = await listJourneys();
+    const first = listed.items?.[0];
+    if (first?.id) {
+      journeyId = first.id;
+      journeyTitle = first.title;
+      journeyDescription = first.description ?? journeyDescription;
+
+      const journey = await getJourney(first.id);
+      journeyTitle = journey.title;
+      journeyDescription = journey.description ?? journeyDescription;
+
+      progressSummary = await getMyProgressSummary(first.id).catch(() => null);
+
+      const levels = journey.levels ?? [];
+      const progressLevels = progressSummary?.levels ?? [];
+
+      const best =
+        progressLevels.find((l) => l.status === "in_progress") ??
+        progressLevels.find((l) => l.status !== "completed") ??
+        progressLevels[0];
+
+      const matchedLevelMeta = best ? levels.find((l) => l.id === best.level_id) : levels[0];
+      const chosenMeta = matchedLevelMeta ?? levels[0];
+
+      levelOrder = chosenMeta?.order ?? 1;
+      levelTitle = chosenMeta?.title ?? `Level ${levelOrder}`;
+
+      if (chosenMeta?.id) {
+        const lvl = await getLevel(chosenMeta.id);
+        levelProgressTotal = lvl.missions?.length ?? chosenMeta.mission_count ?? 0;
+
+        let completed = 0;
+        try {
+          const lp = await getMyLevelProgress(chosenMeta.id);
+          completed = lp.missions?.filter((m) => m.status === "completed").length ?? 0;
+        } catch {
+          completed = 0;
+        }
+
+        levelProgressCompleted = completed;
+      }
+    }
+  } catch {
+    // ignore and fall back to dummy-ish UI below
+  }
 
   const userName = session?.user?.name ?? "Explorer";
 
-  const weeksCompleted = 6;
-  const missionsDone = 18;
+  const weeksCompleted = progressSummary?.levels?.filter((l) => l.status === "completed").length ?? 0;
+  const missionsDone = levelProgressCompleted;
   const badgesEarned = 5;
 
   const xp = 1200;
   const xpMax = 2000;
   const xpPct = Math.min(100, (xp / xpMax) * 100);
-  const art = cityArtForLevel(current.levelNumber);
-  const weekCompleted = Math.min(3, current.completedTasks);
-  const weekTotal = 5;
-  const weekPct = Math.min(100, (weekCompleted / Math.max(1, weekTotal)) * 100);
+  const art = cityArtForLevel(levelOrder);
+  const weekCompleted = levelProgressCompleted;
+  const weekTotal = Math.max(1, levelProgressTotal || 5);
+  const weekPct = Math.min(100, (weekCompleted / weekTotal) * 100);
 
   return (
     <div className="mx-auto max-w-md px-4 pt-6 pb-8">
       <header className="flex items-start justify-between gap-4">
         <div>
           <div className="text-sm font-semibold">Hello, {userName}! 👋</div>
-          <div className="mt-0.5 text-xs text-muted">Week {current.levelNumber} of 52</div>
+          <div className="mt-0.5 text-xs text-muted">Week {levelOrder} of 52</div>
         </div>
         <button
           type="button"
@@ -78,7 +131,7 @@ export default async function HomeDashboardPage() {
           <div className="absolute inset-0 px-5 py-4 flex items-center justify-between gap-4">
             <div className="text-white min-w-0">
               <div className="text-sm font-semibold">Explorer</div>
-              <div className="mt-0.5 text-xs text-white/85">Level 2</div>
+              <div className="mt-0.5 text-xs text-white/85">{levelTitle}</div>
               <div className="mt-3 text-[11px] text-white/85">
                 {xp} / {xpMax} XP
               </div>
@@ -123,9 +176,9 @@ export default async function HomeDashboardPage() {
           <div className="text-xs text-muted font-semibold">This Week’s Theme</div>
           <div className="mt-2 flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <div className="text-sm font-semibold truncate">Getting Around Bangalore</div>
+              <div className="text-sm font-semibold truncate">{journeyTitle}</div>
               <div className="mt-1 text-xs text-muted">
-                Learn the ways, move like a Bangalorean!
+                {journeyDescription}
               </div>
             </div>
             <AutoRickshawFloat />
@@ -135,7 +188,7 @@ export default async function HomeDashboardPage() {
             <div className="text-xs text-muted">
               {weekCompleted} / {weekTotal} missions completed
             </div>
-            <ProgressDots completed={Math.min(3, current.completedTasks)} total={5} />
+            <ProgressDots completed={weekCompleted} total={weekTotal} />
           </div>
 
           <div className="mt-3 h-2.5 rounded-full bg-black/5 ring-1 ring-black/8 overflow-hidden">
@@ -147,7 +200,7 @@ export default async function HomeDashboardPage() {
         </div>
 
         <Link
-          href={`/journey/week/${current.levelNumber}`}
+          href={journeyId ? `/journey/stage/${journeyId}/level/${levelOrder}` : "/journey"}
           className="flex items-center justify-between px-5 py-4 border-t border-black/5 text-sm font-semibold"
         >
           Continue your journey

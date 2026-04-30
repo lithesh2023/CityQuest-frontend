@@ -22,7 +22,26 @@ function statusPill(status: JourneyStageConfig["status"]) {
   }
 }
 
-export function JourneyTimeline({ stages }: { stages: JourneyStageConfig[] }) {
+function toTitleCase(input: string) {
+  return input
+    .trim()
+    .split(/\s+/g)
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
+
+export function JourneyTimeline({
+  stages,
+  locations,
+  locationSlug,
+  onChangeLocation,
+}: {
+  stages: JourneyStageConfig[];
+  locations: Array<{ id: string; slug: string; name: string }>;
+  locationSlug: string;
+  onChangeLocation: (slug: string) => void;
+}) {
   return (
     <div className="mx-auto max-w-md px-4 pt-4 pb-6">
       <header className="flex items-center justify-between">
@@ -34,8 +53,26 @@ export function JourneyTimeline({ stages }: { stages: JourneyStageConfig[] }) {
           <ChevronLeft className="h-5 w-5" />
         </Link>
 
-        <div className="text-center">
+        <div className="flex min-w-0 flex-col items-center gap-1">
           <h1 className="text-base font-semibold tracking-tight">Your Journey</h1>
+          <label className="relative">
+            <span className="sr-only">Select location</span>
+            <select
+              value={locationSlug}
+              onChange={(e) => onChangeLocation(e.target.value)}
+              className="h-8 max-w-[180px] cursor-pointer appearance-none rounded-full bg-card px-3 pr-7 text-xs font-semibold text-muted ring-1 ring-black/10 outline-none hover:bg-black/2 focus:ring-2 focus:ring-accent/40"
+              aria-label="Select location"
+            >
+              {locations.map((l) => (
+                <option key={l.id} value={l.slug}>
+                  {toTitleCase(l.name)}
+                </option>
+              ))}
+            </select>
+            <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-muted">
+              ▾
+            </span>
+          </label>
         </div>
 
         <button

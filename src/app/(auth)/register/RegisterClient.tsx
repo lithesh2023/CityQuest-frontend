@@ -1,69 +1,28 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Sparkles } from "lucide-react";
-import Link from "next/link";
+import { registerWithEmailPassword } from "@/lib/api/auth";
 
 function cx(...classes: Array<string | false | undefined | null>) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function LoginClient() {
+export default function RegisterClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { status } = useSession();
-
   const from = useMemo(() => searchParams.get("from") || "/home", [searchParams]);
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (status === "authenticated") {
-      router.replace(from);
-    }
-  }, [status, from, router]);
-
-  if (status === "loading") {
-    return (
-      <div className="min-h-[100svh] px-4 py-10 flex items-center justify-center text-sm text-muted">
-        Loading…
-      </div>
-    );
-  }
-
-  if (status === "authenticated") {
-    return null;
-  }
-
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
-    setIsSubmitting(true);
-
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-      callbackUrl: from,
-    });
-
-    setIsSubmitting(false);
-
-    if (!res || res.error) {
-      setError(
-        "Invalid credentials. Use your API login, or set DEMO_EMAIL + DEMO_PASSWORD in .env.local, or the built-in test user test@cityquest.app / CityQuest@123",
-      );
-      return;
-    }
-
-    router.replace(from);
-  }
 
   async function onGoogle() {
     setError(null);
@@ -77,32 +36,52 @@ export default function LoginClient() {
     window.location.href = `${base}/v1/auth/google/start?redirect_uri=${encodeURIComponent(redirectUri)}`;
   }
 
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await registerWithEmailPassword({ name: name.trim(), email: email.trim(), password });
+
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+        callbackUrl: from,
+      });
+
+      if (!res || res.error) {
+        router.replace(`/login?from=${encodeURIComponent(from)}`);
+        return;
+      }
+
+      router.replace(from);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Registration failed");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <div className="min-h-[100svh] px-4 py-10 flex items-center justify-center">
       <div className="w-full max-w-sm">
         <div className="rounded-3xl border border-border bg-card/80 backdrop-blur-xl shadow-glow p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <div className="inline-flex items-center gap-2 text-sm text-muted">
-                <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/10">
-                  <Sparkles className="h-4 w-4 text-warning" />
-                </span>
-                CityQuest
-              </div>
-              <h1 className="mt-2 text-2xl font-semibold tracking-tight">
-                Welcome back
-              </h1>
-              <p className="mt-1 text-sm text-muted">
-                Continue your 52-week journey.
-              </p>
-            </div>
-            <Link
-              href={`/register?from=${encodeURIComponent(from)}`}
-              className="shrink-0 rounded-full px-3 py-1.5 text-xs font-medium bg-white/10 hover:bg-white/15 ring-1 ring-white/10 transition"
-            >
-              Sign Up
-            </Link>
+          <div className="inline-flex items-center gap-2 text-sm text-muted">
+            <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/10">
+              <Sparkles className="h-4 w-4 text-warning" />
+            </span>
+            CityQuest
           </div>
+
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight">Create your account</h1>
+          <p className="mt-1 text-sm text-muted">Sign up with Google or email.</p>
 
           <div className="mt-6 space-y-3">
             <button
@@ -138,6 +117,7 @@ export default function LoginClient() {
                 Continue with Google
               </span>
             </button>
+
             <div className="relative py-2">
               <div className="h-px bg-white/10" />
               <div className="absolute inset-0 grid place-items-center">
@@ -147,6 +127,19 @@ export default function LoginClient() {
           </div>
 
           <form onSubmit={onSubmit} className="mt-2 space-y-4">
+            <label className="block">
+              <span className="text-xs font-medium text-muted">Name</span>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                type="text"
+                autoComplete="name"
+                placeholder="Your name"
+                className="mt-1 w-full rounded-2xl bg-white/5 ring-1 ring-white/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/60"
+                required
+              />
+            </label>
+
             <label className="block">
               <span className="text-xs font-medium text-muted">Email</span>
               <input
@@ -168,7 +161,7 @@ export default function LoginClient() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
+                  autoComplete="new-password"
                   placeholder="••••••••"
                   className="w-full rounded-2xl bg-white/5 ring-1 ring-white/10 pl-4 pr-12 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/60"
                   required
@@ -179,13 +172,22 @@ export default function LoginClient() {
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 rounded-xl p-2 text-muted hover:text-foreground hover:bg-white/5 transition"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
+            </label>
+
+            <label className="block">
+              <span className="text-xs font-medium text-muted">Confirm password</span>
+              <input
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
+                placeholder="••••••••"
+                className="mt-1 w-full rounded-2xl bg-white/5 ring-1 ring-white/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/60"
+                required
+              />
             </label>
 
             {error ? (
@@ -203,14 +205,15 @@ export default function LoginClient() {
                 "hover:brightness-110 active:brightness-95 disabled:opacity-60",
               )}
             >
-              {isSubmitting
-                ? "Signing in…"
-                : "Log In"}
+              {isSubmitting ? "Creating account…" : "Create Account"}
             </button>
 
             <p className="text-xs text-muted leading-relaxed">
-              Session is stored in secure cookies via NextAuth, so it stays logged in
-              even after closing the PWA.
+              Already have an account?{" "}
+              <Link href={`/login?from=${encodeURIComponent(from)}`} className="text-foreground underline underline-offset-4">
+                Log in
+              </Link>
+              .
             </p>
           </form>
         </div>

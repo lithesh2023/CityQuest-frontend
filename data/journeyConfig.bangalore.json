@@ -1,0 +1,1736 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-28T15:54:23.602Z",
+  "stages": [
+    {
+      "id": "stranger",
+      "title": "Stranger",
+      "weeksLabel": "Weeks 1 - 8",
+      "description": "Stage Stranger Description",
+      "accent": "green",
+      "status": "completed",
+      "imageUrl": "/images/metro.png",
+      "levels": [
+        {
+          "id": "stranger-l1",
+          "levelNumber": 1,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "s1l1-food",
+              "category": "food",
+              "title": "Benne Dosa at CTR.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l1-history",
+              "category": "history",
+              "title": "Tour Bangalore Fort.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l1-activity",
+              "category": "activity",
+              "title": "End-to-End Metro Ride.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l1-experience",
+              "category": "experience",
+              "title": "Browse Blossom Book House.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l1-dynamic",
+              "category": "dynamic",
+              "title": "Avarekai Mela Visit.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l1-sponsored",
+              "category": "sponsored",
+              "title": "10% Off Maverick Coffee.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "stranger-l2",
+          "levelNumber": 2,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "s1l2-food",
+              "category": "food",
+              "title": "Filter Coffee at Brahmin's.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l2-history",
+              "category": "history",
+              "title": "Vidhana Soudha (Night).",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l2-activity",
+              "category": "activity",
+              "title": "Cubbon Park Dog Park.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l2-experience",
+              "category": "experience",
+              "title": "Gandhi Bazaar Flowers.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l2-dynamic",
+              "category": "dynamic",
+              "title": "Lalbagh Flower Show.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l2-sponsored",
+              "category": "sponsored",
+              "title": "Free Drink at Toit.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "stranger-l3",
+          "levelNumber": 3,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "s1l3-food",
+              "category": "food",
+              "title": "Shivaji Military Hotel.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l3-history",
+              "category": "history",
+              "title": "Bull Temple Monolith.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l3-activity",
+              "category": "activity",
+              "title": "Sankey Tank Sunset.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l3-experience",
+              "category": "experience",
+              "title": "Ranga Shankara Play.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l3-dynamic",
+              "category": "dynamic",
+              "title": "Chitra Santhe Fair.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l3-sponsored",
+              "category": "sponsored",
+              "title": "10% Off Bangalore Cafe.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "stranger-l4",
+          "levelNumber": 4,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "s1l4-food",
+              "category": "food",
+              "title": "VV Puram Street Food.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l4-history",
+              "category": "history",
+              "title": "NGMA Art Gallery.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l4-activity",
+              "category": "activity",
+              "title": "100ft Rd Walk.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l4-experience",
+              "category": "experience",
+              "title": "Single-Screen Cinema.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l4-dynamic",
+              "category": "dynamic",
+              "title": "IPL Match Screening.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l4-sponsored",
+              "category": "sponsored",
+              "title": "15% Off EatConfetti.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "stranger-l5",
+          "levelNumber": 5,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "s1l5-food",
+              "category": "food",
+              "title": "Corner House DBC.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l5-history",
+              "category": "history",
+              "title": "Someshwara Inscriptions.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l5-activity",
+              "category": "activity",
+              "title": "Richards Town Bungalows.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l5-experience",
+              "category": "experience",
+              "title": "Live Jazz Night.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l5-dynamic",
+              "category": "dynamic",
+              "title": "Bangalore Lit Fest.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "s1l5-sponsored",
+              "category": "sponsored",
+              "title": "Deal at MAP Museum.",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "visitor",
+      "title": "Visitor",
+      "weeksLabel": "Weeks 9 - 20",
+      "description": "",
+      "accent": "amber",
+      "status": "in_progress",
+      "imageUrl": "/images/metro.png",
+      "levels": [
+        {
+          "id": "visitor-l1",
+          "levelNumber": 1,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "visitor-l1-food",
+              "category": "food",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l1-history",
+              "category": "history",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l1-activity",
+              "category": "activity",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l1-experience",
+              "category": "experience",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l1-dynamic",
+              "category": "dynamic",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l1-sponsored",
+              "category": "sponsored",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "visitor-l2",
+          "levelNumber": 2,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "visitor-l2-food",
+              "category": "food",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l2-history",
+              "category": "history",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l2-activity",
+              "category": "activity",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l2-experience",
+              "category": "experience",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l2-dynamic",
+              "category": "dynamic",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l2-sponsored",
+              "category": "sponsored",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "visitor-l3",
+          "levelNumber": 3,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "visitor-l3-food",
+              "category": "food",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l3-history",
+              "category": "history",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l3-activity",
+              "category": "activity",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l3-experience",
+              "category": "experience",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l3-dynamic",
+              "category": "dynamic",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l3-sponsored",
+              "category": "sponsored",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "visitor-l4",
+          "levelNumber": 4,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "visitor-l4-food",
+              "category": "food",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l4-history",
+              "category": "history",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l4-activity",
+              "category": "activity",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l4-experience",
+              "category": "experience",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l4-dynamic",
+              "category": "dynamic",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l4-sponsored",
+              "category": "sponsored",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "visitor-l5",
+          "levelNumber": 5,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "visitor-l5-food",
+              "category": "food",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l5-history",
+              "category": "history",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l5-activity",
+              "category": "activity",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l5-experience",
+              "category": "experience",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l5-dynamic",
+              "category": "dynamic",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "visitor-l5-sponsored",
+              "category": "sponsored",
+              "title": "Coming soon",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "explorer",
+      "title": "Explorer",
+      "weeksLabel": "Weeks 21 - 36",
+      "description": "",
+      "accent": "purple",
+      "status": "locked",
+      "imageUrl": "/images/metro.png",
+      "levels": [
+        {
+          "id": "explorer-l1",
+          "levelNumber": 1,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "explorer-l1-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l1-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l1-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l1-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l1-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l1-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "explorer-l2",
+          "levelNumber": 2,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "explorer-l2-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l2-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l2-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l2-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l2-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l2-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "explorer-l3",
+          "levelNumber": 3,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "explorer-l3-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l3-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l3-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l3-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l3-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l3-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "explorer-l4",
+          "levelNumber": 4,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "explorer-l4-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l4-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l4-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l4-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l4-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l4-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "explorer-l5",
+          "levelNumber": 5,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "explorer-l5-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l5-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l5-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l5-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l5-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "explorer-l5-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "insider",
+      "title": "Insider",
+      "weeksLabel": "Weeks 37 - 44",
+      "description": "",
+      "accent": "purple",
+      "status": "locked",
+      "imageUrl": "/images/metro.png",
+      "levels": [
+        {
+          "id": "insider-l1",
+          "levelNumber": 1,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "insider-l1-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l1-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l1-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l1-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l1-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l1-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "insider-l2",
+          "levelNumber": 2,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "insider-l2-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l2-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l2-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l2-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l2-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l2-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "insider-l3",
+          "levelNumber": 3,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "insider-l3-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l3-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l3-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l3-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l3-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l3-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "insider-l4",
+          "levelNumber": 4,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "insider-l4-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l4-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l4-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l4-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l4-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l4-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "insider-l5",
+          "levelNumber": 5,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "insider-l5-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l5-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l5-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l5-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l5-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "insider-l5-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bangalorean",
+      "title": "Bangalorean",
+      "weeksLabel": "Weeks 45 - 52",
+      "description": "",
+      "accent": "purple",
+      "status": "locked",
+      "imageUrl": "/images/metro.png",
+      "levels": [
+        {
+          "id": "bangalorean-l1",
+          "levelNumber": 1,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "bangalorean-l1-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l1-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l1-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l1-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l1-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l1-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "bangalorean-l2",
+          "levelNumber": 2,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "bangalorean-l2-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l2-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l2-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l2-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l2-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l2-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "bangalorean-l3",
+          "levelNumber": 3,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "bangalorean-l3-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l3-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l3-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l3-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l3-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l3-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "bangalorean-l4",
+          "levelNumber": 4,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "bangalorean-l4-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l4-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l4-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l4-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l4-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l4-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        },
+        {
+          "id": "bangalorean-l5",
+          "levelNumber": 5,
+          "imageUrl": "/images/metro.png",
+          "tasks": [
+            {
+              "id": "bangalorean-l5-food",
+              "category": "food",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l5-history",
+              "category": "history",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l5-activity",
+              "category": "activity",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l5-experience",
+              "category": "experience",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l5-dynamic",
+              "category": "dynamic",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            },
+            {
+              "id": "bangalorean-l5-sponsored",
+              "category": "sponsored",
+              "title": "Locked",
+              "description": "",
+              "address": "",
+              "completed": false,
+              "imageUrl": "/images/metro.png",
+              "galleryUrls": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

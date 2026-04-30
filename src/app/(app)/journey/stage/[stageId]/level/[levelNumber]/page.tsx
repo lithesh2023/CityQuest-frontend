@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
-import { readJourneyConfig } from "@/lib/journeyConfigStore";
+import { getJourney, getLevel, getMyLevelProgress } from "@/lib/api/cityquest";
+import { levelToLevelConfig } from "@/lib/api/adapters";
+import type { JourneyStageConfig } from "@/lib/journeyConfigTypes";
 import StageLevelMissionsClient from "./StageLevelMissionsClient";
 
 export default async function StageLevelMissionsPage({
@@ -11,11 +13,41 @@ export default async function StageLevelMissionsPage({
   const lvlNum = Number(levelNumber);
   if (!Number.isFinite(lvlNum)) notFound();
 
-  const cfg = await readJourneyConfig();
-  const stage = cfg.stages.find((s) => s.id === stageId);
-  const level = stage?.levels.find((l) => l.levelNumber === lvlNum);
-  if (!stage || !level) notFound();
+  let journey;
+  try {
+    journey = await getJourney(stageId);
+  } catch {
+    notFound();
+  }
+  const levelSummary = journey.levels?.find((l) => (l.order ?? 0) === lvlNum);
+  if (!levelSummary) notFound();
 
-  return <StageLevelMissionsClient stage={stage} level={level} />;
+  let level;
+  try {
+    level = await getLevel(levelSummary.id);
+  } catch {
+    notFound();
+  }
+
+  let progress = null;
+  try {
+    progress = await getMyLevelProgress(level.id);
+  } catch {
+    progress = null;
+  }
+
+  const stage: JourneyStageConfig = {
+    id: journey.id,
+    title: journey.title,
+    weeksLabel: journey.description ?? "",
+    accent: "amber",
+    status: "in_progress",
+    imageUrl: "/images/metro.png",
+    levels: [],
+  };
+
+  const levelConfig = levelToLevelConfig(stage, level, lvlNum, progress);
+
+  return <StageLevelMissionsClient stage={stage} level={levelConfig} />;
 }
 

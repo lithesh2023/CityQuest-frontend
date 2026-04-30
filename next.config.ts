@@ -15,6 +15,13 @@ const nextConfig: NextConfig = {
       { pathname: "/images/**" },
       { pathname: "/images/**", search: "?*" },
     ],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "cityquest-uat.s3.ap-south-1.amazonaws.com",
+        pathname: "/**",
+      },
+    ],
   },
 };
 

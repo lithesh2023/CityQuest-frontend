@@ -10,6 +10,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
           <nav className="flex items-center gap-2 text-sm">
             <Link
+              href="/admin/locations"
+              className="rounded-xl px-3 py-1.5 bg-black/5 ring-1 ring-black/10 hover:bg-black/8 transition"
+            >
+              Locations
+            </Link>
+            <Link
               href="/admin/journey"
               className="rounded-xl px-3 py-1.5 bg-black/5 ring-1 ring-black/10 hover:bg-black/8 transition"
             >
