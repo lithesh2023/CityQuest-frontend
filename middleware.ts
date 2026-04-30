@@ -28,7 +28,8 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET ?? "dev-secret-change-me",
   });
 
-  if (!token) {
+  const accessToken = (token as unknown as { accessToken?: string | null }).accessToken ?? null;
+  if (!token || !accessToken) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("from", pathname);

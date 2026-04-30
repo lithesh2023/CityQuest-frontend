@@ -4,9 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { LogoutButton } from "@/components/LogoutButton";
 import { Bike, MapPin, User, UserRoundPlus, Utensils } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default async function ProfilePage() {
   const session = await getServerSession(authOptions);
+  const accessToken = (session as unknown as { accessToken?: string | null })?.accessToken ?? null;
+  if (!session || !accessToken) redirect("/login?from=/profile");
 
   const name = session?.user?.name ?? "Explorer";
   const levelLabel = "Explorer Level 2";

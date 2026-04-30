@@ -6,7 +6,8 @@ import { authOptions } from "@/lib/auth";
 
 export default async function Home() {
   const session = await getServerSession(authOptions);
-  if (session) redirect("/home");
+  const accessToken = (session as unknown as { accessToken?: string | null })?.accessToken ?? null;
+  if (session && accessToken) redirect("/home");
 
   return (
     <main className="min-h-[100svh] flex items-stretch justify-center">

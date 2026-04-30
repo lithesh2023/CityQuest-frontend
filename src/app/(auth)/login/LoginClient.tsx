@@ -13,7 +13,7 @@ function cx(...classes: Array<string | false | undefined | null>) {
 export default function LoginClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { status } = useSession();
+  const { status, data: session } = useSession();
 
   const from = useMemo(() => searchParams.get("from") || "/home", [searchParams]);
 
@@ -24,10 +24,11 @@ export default function LoginClient() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === "authenticated") {
+    const accessToken = (session as unknown as { accessToken?: string | null })?.accessToken ?? null;
+    if (status === "authenticated" && accessToken) {
       router.replace(from);
     }
-  }, [status, from, router]);
+  }, [status, session, from, router]);
 
   if (status === "loading") {
     return (
@@ -37,7 +38,8 @@ export default function LoginClient() {
     );
   }
 
-  if (status === "authenticated") {
+  const authedAccessToken = (session as unknown as { accessToken?: string | null })?.accessToken ?? null;
+  if (status === "authenticated" && authedAccessToken) {
     return null;
   }
 

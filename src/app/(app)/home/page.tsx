@@ -5,6 +5,7 @@ import { Bell } from "lucide-react";
 import { authOptions } from "@/lib/auth";
 import { AutoRickshawFloat } from "@/components/AutoRickshawFloat";
 import { getJourney, getLevel, getMyLevelProgress, getMyProgressSummary, listJourneys } from "@/lib/api/cityquest";
+import { redirect } from "next/navigation";
 
 function cityArtForLevel(levelNumber: number) {
   const options = [
@@ -36,6 +37,8 @@ function ProgressDots({ completed, total }: { completed: number; total: number }
 
 export default async function HomeDashboardPage() {
   const session = await getServerSession(authOptions);
+  const accessToken = (session as unknown as { accessToken?: string | null })?.accessToken ?? null;
+  if (!session || !accessToken) redirect("/login?from=/home");
 
   let journeyId: string | null = null;
   let journeyTitle = "Your Journey";
