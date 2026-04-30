@@ -12,11 +12,21 @@ type AdminMission = {
   address?: string;
   task_type?: string;
   xp?: number;
+  geo_rule?: { type: "radius_meters"; lat: number; lng: number; radius_m: number };
+  min_accuracy_m?: number;
+  time_window_sec?: number;
   image_key?: string;
   image_url?: string;
   gallery_keys?: string[];
   gallery_urls?: string[];
 };
+
+type AdminMissionUpdatePayload = Partial<
+  Pick<
+    AdminMission,
+    "title" | "description" | "address" | "task_type" | "xp" | "min_accuracy_m" | "time_window_sec"
+  >
+> & { geo_rule?: AdminMission["geo_rule"] | null };
 
 type AdminLevel = {
   id: string;
@@ -211,7 +221,10 @@ export default function JourneyAdminClient() {
     await refreshJourneys();
   }
 
-  async function updateMission(missionId: string, payload: Partial<Pick<AdminMission, "title" | "description" | "address" | "task_type" | "xp">>) {
+  async function updateMission(
+    missionId: string,
+    payload: AdminMissionUpdatePayload,
+  ) {
     setError(null);
     const res = await fetch(`/api/admin/missions/${encodeURIComponent(missionId)}`, {
       method: "PATCH",
@@ -711,7 +724,7 @@ function MissionEditor({
   onDelete,
 }: {
   mission: AdminMission;
-  onSave: (payload: Partial<Pick<AdminMission, "title" | "description" | "address" | "task_type" | "xp">>) => Promise<void>;
+  onSave: (payload: AdminMissionUpdatePayload) => Promise<void>;
   onDelete: () => Promise<void>;
 }) {
   const [open, setOpen] = useState(false);
@@ -721,6 +734,12 @@ function MissionEditor({
     address: mission.address ?? "",
     task_type: mission.task_type ?? "text",
     xp: typeof mission.xp === "number" ? mission.xp : 100,
+    geo_enabled: Boolean(mission.geo_rule),
+    geo_lat: mission.geo_rule?.lat != null ? String(mission.geo_rule.lat) : "",
+    geo_lng: mission.geo_rule?.lng != null ? String(mission.geo_rule.lng) : "",
+    geo_radius_m: mission.geo_rule?.radius_m != null ? String(mission.geo_rule.radius_m) : "150",
+    min_accuracy_m: mission.min_accuracy_m != null ? String(mission.min_accuracy_m) : "",
+    time_window_sec: mission.time_window_sec != null ? String(mission.time_window_sec) : "",
   });
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -732,15 +751,33 @@ function MissionEditor({
       address: mission.address ?? "",
       task_type: mission.task_type ?? "text",
       xp: typeof mission.xp === "number" ? mission.xp : 100,
+      geo_enabled: Boolean(mission.geo_rule),
+      geo_lat: mission.geo_rule?.lat != null ? String(mission.geo_rule.lat) : "",
+      geo_lng: mission.geo_rule?.lng != null ? String(mission.geo_rule.lng) : "",
+      geo_radius_m: mission.geo_rule?.radius_m != null ? String(mission.geo_rule.radius_m) : "150",
+      min_accuracy_m: mission.min_accuracy_m != null ? String(mission.min_accuracy_m) : "",
+      time_window_sec: mission.time_window_sec != null ? String(mission.time_window_sec) : "",
     });
   }, [mission]);
+
+  const missionGeoEnabled = Boolean(mission.geo_rule);
+  const missionGeoLat = mission.geo_rule?.lat != null ? String(mission.geo_rule.lat) : "";
+  const missionGeoLng = mission.geo_rule?.lng != null ? String(mission.geo_rule.lng) : "";
+  const missionGeoRadiusM = mission.geo_rule?.radius_m != null ? String(mission.geo_rule.radius_m) : "150";
+  const missionMinAccuracyM = mission.min_accuracy_m != null ? String(mission.min_accuracy_m) : "";
+  const missionTimeWindowSec = mission.time_window_sec != null ? String(mission.time_window_sec) : "";
 
   const dirty =
     draft.title !== (mission.title ?? "") ||
     draft.description !== (mission.description ?? "") ||
     draft.address !== (mission.address ?? "") ||
     draft.task_type !== (mission.task_type ?? "text") ||
-    draft.xp !== (typeof mission.xp === "number" ? mission.xp : 100);
+    draft.xp !== (typeof mission.xp === "number" ? mission.xp : 100) ||
+    draft.geo_enabled !== missionGeoEnabled ||
+    (draft.geo_enabled &&
+      (draft.geo_lat !== missionGeoLat || draft.geo_lng !== missionGeoLng || draft.geo_radius_m !== missionGeoRadiusM)) ||
+    draft.min_accuracy_m !== missionMinAccuracyM ||
+    draft.time_window_sec !== missionTimeWindowSec;
 
   return (
     <div className="rounded-2xl bg-white/80 ring-1 ring-black/8 p-3">
@@ -815,6 +852,88 @@ function MissionEditor({
             />
           </label>
 
+          <details className="md:col-span-2 rounded-2xl bg-black/2 ring-1 ring-black/8 p-3">
+            <summary className="cursor-pointer text-sm font-semibold">Geo validation</summary>
+            <div className="mt-3 space-y-3">
+              <label className="flex items-center gap-2 text-sm">
+                <input
+                  type="checkbox"
+                  checked={draft.geo_enabled}
+                  onChange={(e) => {
+                    const checked = e.target.checked;
+                    setDraft((d) => ({
+                      ...d,
+                      geo_enabled: checked,
+                      geo_radius_m: checked ? d.geo_radius_m || "150" : d.geo_radius_m,
+                    }));
+                  }}
+                />
+                <span>Require user to be within a radius of the target location</span>
+              </label>
+
+              <div className={cx("grid gap-2 md:grid-cols-3", !draft.geo_enabled && "opacity-70")}>
+                <label className="block">
+                  <FieldLabel required>Latitude</FieldLabel>
+                  <input
+                    value={draft.geo_lat}
+                    onChange={(e) => setDraft((d) => ({ ...d, geo_lat: e.target.value }))}
+                    inputMode="decimal"
+                    placeholder="12.9716"
+                    disabled={!draft.geo_enabled}
+                    className="mt-1 w-full rounded-2xl bg-white/70 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40 disabled:cursor-not-allowed"
+                  />
+                </label>
+                <label className="block">
+                  <FieldLabel required>Longitude</FieldLabel>
+                  <input
+                    value={draft.geo_lng}
+                    onChange={(e) => setDraft((d) => ({ ...d, geo_lng: e.target.value }))}
+                    inputMode="decimal"
+                    placeholder="77.5946"
+                    disabled={!draft.geo_enabled}
+                    className="mt-1 w-full rounded-2xl bg-white/70 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40 disabled:cursor-not-allowed"
+                  />
+                </label>
+                <label className="block">
+                  <FieldLabel required>Radius (m)</FieldLabel>
+                  <input
+                    value={draft.geo_radius_m}
+                    onChange={(e) => setDraft((d) => ({ ...d, geo_radius_m: e.target.value }))}
+                    inputMode="numeric"
+                    placeholder="150"
+                    disabled={!draft.geo_enabled}
+                    className="mt-1 w-full rounded-2xl bg-white/70 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40 disabled:cursor-not-allowed"
+                  />
+                </label>
+              </div>
+
+              <div className="grid gap-2 md:grid-cols-2">
+                <label className="block">
+                  <FieldLabel>Min accuracy (m)</FieldLabel>
+                  <input
+                    value={draft.min_accuracy_m}
+                    onChange={(e) => setDraft((d) => ({ ...d, min_accuracy_m: e.target.value }))}
+                    inputMode="numeric"
+                    placeholder="e.g., 50"
+                    disabled={!draft.geo_enabled}
+                    className="mt-1 w-full rounded-2xl bg-white/70 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
+                  />
+                </label>
+                <label className="block">
+                  <FieldLabel>Time window (sec)</FieldLabel>
+                  <input
+                    value={draft.time_window_sec}
+                    onChange={(e) => setDraft((d) => ({ ...d, time_window_sec: e.target.value }))}
+                    inputMode="numeric"
+                    placeholder="e.g., 600"
+                    disabled={!draft.geo_enabled}
+                    className="mt-1 w-full rounded-2xl bg-white/70 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
+                  />
+                </label>
+              </div>
+            </div>
+          </details>
+
           <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-2 pt-1">
             <button
               type="button"
@@ -845,6 +964,12 @@ function MissionEditor({
                   address: mission.address ?? "",
                   task_type: mission.task_type ?? "text",
                   xp: typeof mission.xp === "number" ? mission.xp : 100,
+                  geo_enabled: Boolean(mission.geo_rule),
+                  geo_lat: mission.geo_rule?.lat != null ? String(mission.geo_rule.lat) : "",
+                  geo_lng: mission.geo_rule?.lng != null ? String(mission.geo_rule.lng) : "",
+                  geo_radius_m: mission.geo_rule?.radius_m != null ? String(mission.geo_rule.radius_m) : "150",
+                  min_accuracy_m: mission.min_accuracy_m != null ? String(mission.min_accuracy_m) : "",
+                  time_window_sec: mission.time_window_sec != null ? String(mission.time_window_sec) : "",
                 })}
                 disabled={!dirty || isSaving || isDeleting}
                 className={cx(
@@ -859,19 +984,51 @@ function MissionEditor({
                 onClick={async () => {
                   setIsSaving(true);
                   try {
+                    const lat = Number(draft.geo_lat);
+                    const lng = Number(draft.geo_lng);
+                    const radiusM = Number(draft.geo_radius_m);
+                    const minAcc = draft.min_accuracy_m.trim() ? Number(draft.min_accuracy_m) : undefined;
+                    const tw = draft.time_window_sec.trim() ? Number(draft.time_window_sec) : undefined;
+
                     await onSave({
                       title: draft.title.trim(),
                       description: draft.description.trim() || undefined,
                       address: draft.address.trim() || undefined,
                       task_type: draft.task_type,
                       xp: draft.xp,
+                      ...(draft.geo_enabled
+                        ? {
+                            geo_rule: {
+                              type: "radius_meters",
+                              lat,
+                              lng,
+                              radius_m: radiusM,
+                            },
+                          }
+                        : mission.geo_rule
+                          ? { geo_rule: null }
+                          : {}),
+                      ...(minAcc !== undefined && !Number.isNaN(minAcc) ? { min_accuracy_m: minAcc } : { min_accuracy_m: undefined }),
+                      ...(tw !== undefined && !Number.isNaN(tw) ? { time_window_sec: tw } : { time_window_sec: undefined }),
                     });
                     setOpen(false);
                   } finally {
                     setIsSaving(false);
                   }
                 }}
-                disabled={!dirty || isSaving || isDeleting || !draft.title.trim()}
+                disabled={
+                  !dirty ||
+                  isSaving ||
+                  isDeleting ||
+                  !draft.title.trim() ||
+                  (draft.geo_enabled &&
+                    (!draft.geo_lat.trim() ||
+                      !draft.geo_lng.trim() ||
+                      !draft.geo_radius_m.trim() ||
+                      Number.isNaN(Number(draft.geo_lat)) ||
+                      Number.isNaN(Number(draft.geo_lng)) ||
+                      Number.isNaN(Number(draft.geo_radius_m))))
+                }
                 className={cx(
                   "rounded-2xl px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_36px_rgba(109,40,217,0.22)] transition",
                   !dirty || isSaving || isDeleting || !draft.title.trim()
