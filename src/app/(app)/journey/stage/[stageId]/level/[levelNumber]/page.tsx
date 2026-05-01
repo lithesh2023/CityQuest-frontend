@@ -69,6 +69,6 @@ export default async function StageLevelMissionsPage({
 
   const levelConfig = levelToLevelConfig(stage, level, lvlNum, progress);
 
-  return <StageLevelMissionsClient stage={stage} level={levelConfig} />;
+  return <StageLevelMissionsClient stage={stage} level={levelConfig} currentLevelNumber={currentLevelOrder} />;
 }
 

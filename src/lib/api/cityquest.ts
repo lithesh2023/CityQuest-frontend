@@ -38,6 +38,8 @@ export type JourneyDetailResponse = {
   id: string;
   title: string;
   description?: string | null;
+  image_key?: string;
+  image_url?: string;
   levels?: JourneyLevelSummary[];
 };
 

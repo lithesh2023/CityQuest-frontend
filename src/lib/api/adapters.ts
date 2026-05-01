@@ -63,12 +63,12 @@ export function journeyToStageConfig(j: JourneyDetailResponse): JourneyStageConf
     weeksLabel: j.description ?? "",
     accent: clampAccent(undefined),
     status: clampStatus(undefined),
-    imageUrl: "/images/metro.png",
+    imageUrl: j.image_url || "/images/metro.png",
     levels:
       j.levels?.map((l) => ({
         id: l.id,
         levelNumber: l.order ?? 0,
-        imageUrl: "/images/metro.png",
+        imageUrl: j.image_url || "/images/metro.png",
         tasks: [],
       })) ?? [],
   };

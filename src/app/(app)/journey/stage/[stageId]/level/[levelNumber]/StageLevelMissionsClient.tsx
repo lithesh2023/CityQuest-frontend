@@ -3,16 +3,19 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { CheckCircle2, Circle, Info, Lock } from "lucide-react";
+import { ArrowRight, CheckCircle2, Circle, Info, Lock } from "lucide-react";
 import type { JourneyLevelConfig, JourneyStageConfig } from "@/lib/journeyConfigTypes";
 import { getCompletedTaskIds, isTaskCompleted } from "@/lib/journeyProgress";
 
 export default function StageLevelMissionsClient({
   stage,
   level,
+  currentLevelNumber,
 }: {
   stage: JourneyStageConfig;
   level: JourneyLevelConfig;
+  /** First not-yet-completed level number for this stage */
+  currentLevelNumber: number;
 }) {
   const [completedIds] = useState<Set<string>>(() => getCompletedTaskIds());
 
@@ -74,6 +77,30 @@ export default function StageLevelMissionsClient({
               <Image src={hero} alt="" fill className="object-cover" sizes="80px" />
             </div>
           </div>
+
+          {isLocked ? (
+            <div className="mt-4 rounded-2xl bg-amber-500/10 ring-1 ring-amber-500/25 px-4 py-3">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-amber-900">
+                    <Lock className="h-4 w-4" aria-hidden="true" />
+                    Locked level
+                  </div>
+                  <div className="mt-1 text-xs text-amber-900/80">
+                    You can preview missions here, but you need to complete{" "}
+                    <span className="font-semibold">Level {Math.max(1, currentLevelNumber)}</span> first.
+                  </div>
+                </div>
+                <Link
+                  href={`/journey/stage/${stage.id}/level/${Math.max(1, currentLevelNumber)}`}
+                  className="shrink-0 inline-flex items-center gap-2 rounded-2xl bg-accent px-3 py-2 text-xs font-semibold text-white shadow-[0_12px_36px_rgba(109,40,217,0.22)] hover:brightness-105 active:brightness-95 transition"
+                >
+                  Go to current
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+          ) : null}
 
           <div className="mt-5 border-t border-black/5 pt-4">
             <div className="flex items-center justify-between text-xs font-semibold text-muted">

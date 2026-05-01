@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { AdminJourney, AdminJourneysResponse, AdminMissionUpdatePayload } from "@/app/(admin)/admin/journey/journeyAdminShared";
 import { FieldLabel, JourneyOrderInline, titleCaseId } from "@/app/(admin)/admin/journey/journeyAdminShared";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import {
   CreateLevelInline,
   CreateMissionInline,
@@ -20,6 +21,8 @@ export default function JourneyAdminDetailClient({ journeyId }: { journeyId: str
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [savingOrderId, setSavingOrderId] = useState(false);
+  const [draftJourneyImageKey, setDraftJourneyImageKey] = useState<string | undefined>(undefined);
+  const [savingJourneyImage, setSavingJourneyImage] = useState(false);
 
   const listHref = locationSlug ? `/admin/journey?location=${encodeURIComponent(locationSlug)}` : "/admin/journey";
 
@@ -38,6 +41,7 @@ export default function JourneyAdminDetailClient({ journeyId }: { journeyId: str
       const json = (await res.json()) as AdminJourneysResponse;
       const j = json.journeys.find((x) => x.id === journeyId) ?? null;
       setJourney(j);
+      setDraftJourneyImageKey(j?.image_key);
       if (!j) setError("This journey was not found for the selected location.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load");
@@ -166,6 +170,7 @@ export default function JourneyAdminDetailClient({ journeyId }: { journeyId: str
   }
 
   const j = journey;
+  const journeyImageDirty = (draftJourneyImageKey ?? "") !== (j.image_key ?? "");
 
   return (
     <div className="space-y-6">
@@ -225,14 +230,47 @@ export default function JourneyAdminDetailClient({ journeyId }: { journeyId: str
           </div>
           <div>
             <FieldLabel>Journey image</FieldLabel>
-            <div className="mt-1 text-[11px] text-muted break-all">
-              {j.image_url ? (
-                <a className="underline" href={j.image_url} target="_blank" rel="noreferrer">
-                  Open signed image
-                </a>
-              ) : (
-                <span>—</span>
-              )}
+            <div className="mt-2">
+              <ImageUploadField
+                label="Upload"
+                value={draftJourneyImageKey}
+                previewUrl={j.image_url}
+                locationSlug={locationSlug}
+                onChange={setDraftJourneyImageKey}
+                helpText="Upload a new journey image. Click Save to persist."
+                disabled={savingJourneyImage || savingOrderId}
+              />
+              <div className="mt-3 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  disabled={!journeyImageDirty || savingJourneyImage || savingOrderId}
+                  onClick={async () => {
+                    setSavingJourneyImage(true);
+                    setError(null);
+                    try {
+                      const res = await fetch(`/api/admin/journeys/${encodeURIComponent(journeyId)}`, {
+                        method: "PATCH",
+                        headers: { "content-type": "application/json" },
+                        body: JSON.stringify({ image_key: draftJourneyImageKey ?? null }),
+                      });
+                      if (!res.ok) throw new Error(`Save journey image failed (${res.status})`);
+                      await loadJourney();
+                    } catch (e) {
+                      setError(e instanceof Error ? e.message : "Save journey image failed");
+                    } finally {
+                      setSavingJourneyImage(false);
+                    }
+                  }}
+                  className={[
+                    "rounded-2xl px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_36px_rgba(109,40,217,0.22)] transition",
+                    !journeyImageDirty || savingJourneyImage || savingOrderId
+                      ? "opacity-70 cursor-not-allowed bg-accent/70"
+                      : "bg-accent hover:brightness-105 active:brightness-95",
+                  ].join(" ")}
+                >
+                  {savingJourneyImage ? "Saving…" : "Save image"}
+                </button>
+              </div>
             </div>
           </div>
         </div>
