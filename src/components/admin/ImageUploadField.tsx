@@ -1,7 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
 import { requestUploadForLocation, confirmUpload } from "@/lib/api/cityquest";
 
@@ -15,6 +14,8 @@ type Props = {
   disabled?: boolean;
   helpText?: string;
   locationSlug?: string;
+  /** When `value` is a storage key (not a URL), show this signed/public URL as preview */
+  previewUrl?: string;
   onChange: (next: string | undefined) => void;
 };
 
@@ -22,16 +23,71 @@ function isLikelyPreviewableUrl(v: string) {
   return v.startsWith("/") || v.startsWith("http://") || v.startsWith("https://") || v.startsWith("blob:");
 }
 
-export function ImageUploadField({ label, value, disabled, helpText, locationSlug, onChange }: Props) {
+const UPLOAD_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+type UploadImageContentType = (typeof UPLOAD_IMAGE_TYPES)[number];
+
+/** Backend only accepts jpeg/png/webp; browsers often omit MIME or send unusable values. */
+function normalizeUploadContentType(file: File): UploadImageContentType | null {
+  const raw = (file.type || "").trim().toLowerCase();
+  if (raw === "image/jpg" || raw === "image/pjpeg") return "image/jpeg";
+  if ((UPLOAD_IMAGE_TYPES as readonly string[]).includes(raw)) return raw as UploadImageContentType;
+
+  const name = (file.name || "").toLowerCase();
+  if (/\.jpe?g$/i.test(name)) return "image/jpeg";
+  if (/\.png$/i.test(name)) return "image/png";
+  if (/\.webp$/i.test(name)) return "image/webp";
+
+  return null;
+}
+
+function uploadErrorMessage(e: unknown): string {
+  if (e instanceof Error) return e.message;
+  if (typeof e === "object" && e !== null && "message" in e) {
+    const m = (e as { message?: unknown }).message;
+    if (typeof m === "string" && m.trim()) return m;
+  }
+  return "Upload failed";
+}
+
+export function ImageUploadField({ label, value, disabled, helpText, locationSlug, previewUrl, onChange }: Props) {
   const { data: session } = useSession();
   const [isUploading, setIsUploading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [localBlobUrl, setLocalBlobUrl] = useState<string | null>(null);
+  const localBlobUrlRef = useRef<string | null>(null);
 
-  const previewSrc = useMemo(() => (value && isLikelyPreviewableUrl(value) ? value : null), [value]);
+  function revokeLocalBlob() {
+    const u = localBlobUrlRef.current;
+    if (u) URL.revokeObjectURL(u);
+    localBlobUrlRef.current = null;
+    setLocalBlobUrl(null);
+  }
+
+  useEffect(() => () => revokeLocalBlob(), []);
+
+  const previewSrc = useMemo(() => {
+    if (localBlobUrl) return localBlobUrl;
+    if (value && isLikelyPreviewableUrl(value)) return value;
+    if (previewUrl && isLikelyPreviewableUrl(previewUrl)) return previewUrl;
+    return null;
+  }, [localBlobUrl, value, previewUrl]);
+
+  // After save, server returns a signed URL for the same file key — drop the local blob preview.
+  useEffect(() => {
+    if (!localBlobUrl || !value || !previewUrl) return;
+    if (!isLikelyPreviewableUrl(value) && isLikelyPreviewableUrl(previewUrl)) {
+      revokeLocalBlob();
+    }
+  }, [localBlobUrl, value, previewUrl]);
 
   async function onPick(file: File | null) {
     setErr(null);
     if (!file) return;
+
+    revokeLocalBlob();
+    const url = URL.createObjectURL(file);
+    localBlobUrlRef.current = url;
+    setLocalBlobUrl(url);
 
     setIsUploading(true);
     try {
@@ -41,11 +97,18 @@ export function ImageUploadField({ label, value, disabled, helpText, locationSlu
       }
       if (!locationSlug) throw new Error("Please select a location first.");
 
+      const content_type = normalizeUploadContentType(file);
+      if (!content_type) {
+        throw new Error(
+          "This image type isn’t supported yet. Please use JPEG, PNG, or WebP (HEIC/GIF won’t work until added).",
+        );
+      }
+
       const upload = await requestUploadForLocation(
         locationSlug,
         {
           purpose: "admin_asset",
-          content_type: file.type || "application/octet-stream",
+          content_type,
           file_name: file.name || "image",
           size_bytes: file.size,
         },
@@ -54,7 +117,7 @@ export function ImageUploadField({ label, value, disabled, helpText, locationSlu
 
       const res = await fetch(upload.upload_url, {
         method: upload.method ?? "PUT",
-        headers: { "content-type": file.type || "application/octet-stream" },
+        headers: { "content-type": content_type },
         body: file,
       });
       if (!res.ok) throw new Error(`Upload failed (${res.status})`);
@@ -68,7 +131,8 @@ export function ImageUploadField({ label, value, disabled, helpText, locationSlu
       // NOTE: backend may later return a public URL; for now we store file_key.
       onChange(upload.file_key);
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Upload failed");
+      revokeLocalBlob();
+      setErr(uploadErrorMessage(e));
     } finally {
       setIsUploading(false);
     }
@@ -80,7 +144,8 @@ export function ImageUploadField({ label, value, disabled, helpText, locationSlu
       <div>
         {previewSrc ? (
           <div className="mb-2 relative h-24 w-40 overflow-hidden rounded-2xl bg-black/5 ring-1 ring-black/10">
-            <Image src={previewSrc} alt="" fill className="object-cover" sizes="160px" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={previewSrc} alt="" className="h-full w-full object-cover" />
           </div>
         ) : null}
 
@@ -96,7 +161,10 @@ export function ImageUploadField({ label, value, disabled, helpText, locationSlu
           <button
             type="button"
             disabled={disabled || isUploading || !value}
-            onClick={() => onChange(undefined)}
+            onClick={() => {
+              revokeLocalBlob();
+              onChange(undefined);
+            }}
             className={cx(
               "rounded-2xl px-3 py-2 text-xs font-semibold ring-1 transition",
               "bg-black/0 text-muted ring-black/10 hover:bg-black/5",
@@ -122,4 +190,3 @@ export function ImageUploadField({ label, value, disabled, helpText, locationSlu
     </div>
   );
 }
-

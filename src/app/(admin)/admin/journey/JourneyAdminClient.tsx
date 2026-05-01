@@ -24,9 +24,9 @@ type AdminMission = {
 type AdminMissionUpdatePayload = Partial<
   Pick<
     AdminMission,
-    "title" | "description" | "address" | "task_type" | "xp" | "min_accuracy_m" | "time_window_sec"
+    "title" | "description" | "address" | "task_type" | "xp" | "min_accuracy_m" | "time_window_sec" | "image_key"
   >
-> & { geo_rule?: AdminMission["geo_rule"] | null };
+> & { geo_rule?: AdminMission["geo_rule"] | null; image_key?: string | null };
 
 type AdminLevel = {
   id: string;
@@ -518,6 +518,7 @@ export default function JourneyAdminClient() {
                             <MissionEditor
                               key={m.id}
                               mission={m}
+                              locationSlug={selectedLocationSlug}
                               onSave={async (p) => {
                                 try {
                                   await updateMission(m.id, p);
@@ -860,10 +861,12 @@ function CreateMissionInline({
 
 function MissionEditor({
   mission,
+  locationSlug,
   onSave,
   onDelete,
 }: {
   mission: AdminMission;
+  locationSlug: string;
   onSave: (payload: AdminMissionUpdatePayload) => Promise<void>;
   onDelete: () => Promise<void>;
 }) {
@@ -872,6 +875,7 @@ function MissionEditor({
     title: mission.title ?? "",
     description: mission.description ?? "",
     address: mission.address ?? "",
+    image_key: mission.image_key,
     task_type: mission.task_type ?? "text",
     xp: typeof mission.xp === "number" ? mission.xp : 100,
     geo_enabled: Boolean(mission.geo_rule),
@@ -889,6 +893,7 @@ function MissionEditor({
       title: mission.title ?? "",
       description: mission.description ?? "",
       address: mission.address ?? "",
+      image_key: mission.image_key,
       task_type: mission.task_type ?? "text",
       xp: typeof mission.xp === "number" ? mission.xp : 100,
       geo_enabled: Boolean(mission.geo_rule),
@@ -906,11 +911,13 @@ function MissionEditor({
   const missionGeoRadiusM = mission.geo_rule?.radius_m != null ? String(mission.geo_rule.radius_m) : "150";
   const missionMinAccuracyM = mission.min_accuracy_m != null ? String(mission.min_accuracy_m) : "";
   const missionTimeWindowSec = mission.time_window_sec != null ? String(mission.time_window_sec) : "";
+  const missionImageKey = mission.image_key ?? "";
 
   const dirty =
     draft.title !== (mission.title ?? "") ||
     draft.description !== (mission.description ?? "") ||
     draft.address !== (mission.address ?? "") ||
+    (draft.image_key ?? "") !== missionImageKey ||
     draft.task_type !== (mission.task_type ?? "text") ||
     draft.xp !== (typeof mission.xp === "number" ? mission.xp : 100) ||
     draft.geo_enabled !== missionGeoEnabled ||
@@ -919,12 +926,23 @@ function MissionEditor({
     draft.min_accuracy_m !== missionMinAccuracyM ||
     draft.time_window_sec !== missionTimeWindowSec;
 
+  const signedImagePreview =
+    mission.image_url && (draft.image_key ?? "") === missionImageKey ? mission.image_url : undefined;
+
   return (
     <div className="rounded-2xl bg-white/80 ring-1 ring-black/8 p-3">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="min-w-0">
-          <div className="truncate text-sm font-semibold">{mission.title}</div>
-          <div className="mt-0.5 text-[11px] text-muted break-all">{mission.id}</div>
+        <div className="flex min-w-0 items-start gap-2">
+          {mission.image_url ? (
+            <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl bg-black/5 ring-1 ring-black/10">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={mission.image_url} alt="" className="h-full w-full object-cover" />
+            </div>
+          ) : null}
+          <div className="min-w-0">
+            <div className="truncate text-sm font-semibold">{mission.title}</div>
+            <div className="mt-0.5 text-[11px] text-muted break-all">{mission.id}</div>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <div className="text-xs text-muted">
@@ -991,6 +1009,17 @@ function MissionEditor({
               className="mt-1 w-full rounded-2xl bg-white/70 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
             />
           </label>
+
+          <div className="md:col-span-2">
+            <ImageUploadField
+              label="Mission image"
+              value={draft.image_key}
+              locationSlug={locationSlug}
+              previewUrl={signedImagePreview}
+              onChange={(next) => setDraft((d) => ({ ...d, image_key: next }))}
+              helpText="Uploads to admin_asset/<location>/… and stores file_key; save mission to persist."
+            />
+          </div>
 
           <details className="md:col-span-2 rounded-2xl bg-black/2 ring-1 ring-black/8 p-3">
             <summary className="cursor-pointer text-sm font-semibold">Geo validation</summary>
@@ -1102,6 +1131,7 @@ function MissionEditor({
                   title: mission.title ?? "",
                   description: mission.description ?? "",
                   address: mission.address ?? "",
+                  image_key: mission.image_key,
                   task_type: mission.task_type ?? "text",
                   xp: typeof mission.xp === "number" ? mission.xp : 100,
                   geo_enabled: Boolean(mission.geo_rule),
@@ -1136,6 +1166,9 @@ function MissionEditor({
                       address: draft.address.trim() || undefined,
                       task_type: draft.task_type,
                       xp: draft.xp,
+                      ...((mission.image_key ?? "") !== (draft.image_key ?? "")
+                        ? { image_key: draft.image_key ?? null }
+                        : {}),
                       ...(draft.geo_enabled
                         ? {
                             geo_rule: {
