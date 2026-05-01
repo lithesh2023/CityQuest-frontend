@@ -1,5 +1,48 @@
 import type { JourneyStageConfig, JourneyLevelConfig, JourneyTaskConfig } from "@/lib/journeyConfigTypes";
-import type { JourneyDetailResponse, LevelDetailResponse, LevelProgressResponse } from "@/lib/api/cityquest";
+import type { JourneyCategory } from "@/lib/journeyData";
+import type {
+  JourneyDetailResponse,
+  LevelDetailResponse,
+  LevelProgressResponse,
+  Mission,
+  MissionDetailResponse,
+} from "@/lib/api/cityquest";
+
+function taskTypeToCategory(taskType: string | null | undefined): JourneyCategory {
+  const t = (taskType ?? "").toLowerCase();
+  if (t.includes("food")) return "food";
+  if (t.includes("history")) return "history";
+  if (t.includes("activity")) return "activity";
+  return "experience";
+}
+
+/** Build task UI config from API mission (level list or mission detail). */
+export function apiMissionToTaskConfig(m: Mission | MissionDetailResponse, completed: boolean): JourneyTaskConfig {
+  const gr = m.geo_rule;
+  const location =
+    gr && typeof gr.lat === "number" && typeof gr.lng === "number"
+      ? {
+          lat: gr.lat,
+          lng: gr.lng,
+          ...(typeof gr.radius_m === "number" ? { radiusM: gr.radius_m } : {}),
+        }
+      : undefined;
+  const addr = typeof m.address === "string" ? m.address.trim() : "";
+  return {
+    id: m.id,
+    category: taskTypeToCategory(m.task_type),
+    title: m.title,
+    ...(typeof m.description === "string" && m.description.trim()
+      ? { description: m.description.trim() }
+      : {}),
+    ...(addr ? { address: addr } : {}),
+    ...(location ? { location } : {}),
+    completed,
+    xp: m.xp ?? 100,
+    imageUrl: "/images/metro.png",
+    galleryUrls: [],
+  };
+}
 
 function clampAccent(accent: string | undefined): JourneyStageConfig["accent"] {
   if (accent === "green" || accent === "amber" || accent === "purple") return accent;
@@ -41,15 +84,9 @@ export function levelToLevelConfig(
     progress?.missions?.filter((m) => m.status === "completed").map((m) => m.mission_id) ?? [],
   );
 
-  const tasks: JourneyTaskConfig[] = (level.missions ?? []).map((m) => ({
-    id: m.id,
-    category: "experience",
-    title: m.title,
-    completed: completedMissionIds.has(m.id),
-    xp: 100,
-    imageUrl: "/images/metro.png",
-    galleryUrls: [],
-  }));
+  const tasks: JourneyTaskConfig[] = (level.missions ?? []).map((m) =>
+    apiMissionToTaskConfig(m, completedMissionIds.has(m.id)),
+  );
 
   return {
     id: level.id,

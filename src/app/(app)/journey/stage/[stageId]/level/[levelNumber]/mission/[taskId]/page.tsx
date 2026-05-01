@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { getJourney, getLevel, getMission, getMyLevelProgress } from "@/lib/api/cityquest";
-import { levelToLevelConfig } from "@/lib/api/adapters";
+import { apiMissionToTaskConfig, levelToLevelConfig } from "@/lib/api/adapters";
 import type { JourneyStageConfig, JourneyTaskConfig } from "@/lib/journeyConfigTypes";
 import StageMissionClient from "./StageMissionClient";
 
@@ -55,17 +55,8 @@ export default async function StageMissionPage({
 
   const levelConfig = levelToLevelConfig(stage, level, lvlNum, progress);
   const found = levelConfig.tasks.find((t) => t.id === mission.id);
-  const task: JourneyTaskConfig =
-    found ??
-    ({
-      id: mission.id,
-      category: "experience",
-      title: mission.title,
-      completed: false,
-      xp: 100,
-      imageUrl: "/images/metro.png",
-      galleryUrls: [],
-    } satisfies JourneyTaskConfig);
+  const completed = progress?.missions?.some((x) => x.mission_id === mission.id && x.status === "completed") ?? false;
+  const task: JourneyTaskConfig = found ?? apiMissionToTaskConfig(mission, completed);
 
   return <StageMissionClient stage={stage} level={levelConfig} task={task} />;
 }

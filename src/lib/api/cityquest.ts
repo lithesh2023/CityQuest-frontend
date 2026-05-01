@@ -41,12 +41,21 @@ export type JourneyDetailResponse = {
   levels?: JourneyLevelSummary[];
 };
 
+export type MissionGeoRule = {
+  type: string;
+  lat: number;
+  lng: number;
+  radius_m?: number;
+};
+
 export type Mission = {
   id: string;
   title: string;
   description?: string | null;
+  address?: string | null;
   task_type?: string | null;
-  geo_rule?: unknown;
+  xp?: number | null;
+  geo_rule?: MissionGeoRule | null;
 };
 
 export type MyJourneyResponse = {
@@ -96,8 +105,10 @@ export type MissionDetailResponse = {
   level_id?: string | null;
   title: string;
   description?: string | null;
+  address?: string | null;
   task_type?: string | null;
-  geo_rule?: unknown;
+  xp?: number | null;
+  geo_rule?: MissionGeoRule | null;
 };
 
 export type ProgressLevel = {

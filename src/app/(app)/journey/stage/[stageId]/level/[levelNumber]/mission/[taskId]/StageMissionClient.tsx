@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Camera, CheckCircle2, Images, Trash2 } from "lucide-react";
+import { Camera, CheckCircle2, Images, MapPin, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import type {
   JourneyLevelConfig,
@@ -19,6 +19,31 @@ import {
 import { confirmUpload, requestUploadForLocation, submitMission } from "@/lib/api/cityquest";
 import type { ApiError } from "@/lib/api/http";
 import { useSelectedLocation } from "@/lib/useSelectedLocation";
+
+function openMissionInExternalMaps(task: {
+  title: string;
+  address?: string;
+  location?: { lat: number; lng: number };
+}) {
+  if (task.location) {
+    const dest = `${task.location.lat},${task.location.lng}`;
+    const isIOS = typeof navigator !== "undefined" && /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const url = isIOS
+      ? `https://maps.apple.com/?daddr=${encodeURIComponent(dest)}`
+      : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dest)}&travelmode=driving`;
+    window.open(url, "_blank", "noopener,noreferrer");
+    return;
+  }
+  const q = task.address?.trim();
+  if (q) {
+    const query = `${q} ${task.title}`.trim();
+    window.open(
+      `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  }
+}
 
 export default function StageMissionClient({
   stage,
@@ -145,6 +170,8 @@ export default function StageMissionClient({
     () => task.imageUrl || level.imageUrl || stage.imageUrl || "/images/metro.png",
     [task.imageUrl, level.imageUrl, stage.imageUrl],
   );
+
+  const canOpenMaps = Boolean(task.location || task.address?.trim());
 
   async function getGeo(): Promise<{ lat: number; lng: number; accuracy_m: number; captured_at: string }> {
     const captured_at = new Date().toISOString();
@@ -281,6 +308,18 @@ export default function StageMissionClient({
           <p className="mt-2 text-sm text-muted">
             {stage.title} • Level {level.levelNumber} • {task.category}
           </p>
+
+          {canOpenMaps ? (
+            <button
+              type="button"
+              onClick={() => openMissionInExternalMaps(task)}
+              className="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-2xl text-sm font-semibold ring-1 transition bg-card text-foreground ring-black/10 hover:bg-black/4"
+              aria-label="Open directions to this place in your maps app"
+            >
+              <MapPin className="h-5 w-5 text-accent" aria-hidden="true" />
+              <span>Open in Maps</span>
+            </button>
+          ) : null}
 
           <div className="mt-5">
             <div className="text-sm font-semibold">How to complete</div>
