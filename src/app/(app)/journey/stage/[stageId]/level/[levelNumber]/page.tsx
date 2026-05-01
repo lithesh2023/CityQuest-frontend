@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
-import { getJourney, getLevel, getMyLevelProgress } from "@/lib/api/cityquest";
+import { getJourney, getLevel, getMyLevelProgress, getMyProgressSummary } from "@/lib/api/cityquest";
 import { levelToLevelConfig } from "@/lib/api/adapters";
 import type { JourneyStageConfig } from "@/lib/journeyConfigTypes";
 import StageLevelMissionsClient from "./StageLevelMissionsClient";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export default async function StageLevelMissionsPage({
   params,
@@ -12,6 +14,9 @@ export default async function StageLevelMissionsPage({
   const { stageId, levelNumber } = await params;
   const lvlNum = Number(levelNumber);
   if (!Number.isFinite(lvlNum)) notFound();
+
+  const session = await getServerSession(authOptions);
+  const authToken = (session as unknown as { accessToken?: string | null })?.accessToken ?? null;
 
   let journey;
   try {
@@ -31,17 +36,33 @@ export default async function StageLevelMissionsPage({
 
   let progress = null;
   try {
-    progress = await getMyLevelProgress(level.id);
+    progress = await getMyLevelProgress(level.id, authToken);
   } catch {
     progress = null;
   }
+
+  let journeyProgress = null;
+  try {
+    if (authToken) journeyProgress = await getMyProgressSummary(journey.id, authToken);
+  } catch {
+    journeyProgress = null;
+  }
+
+  const completedByLevelId = new Map<string, boolean>();
+  for (const row of journeyProgress?.levels ?? []) {
+    if (row.status === "completed") completedByLevelId.set(row.level_id, true);
+  }
+  const levelsOrdered = (journey.levels ?? []).slice().sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const currentIdx = Math.max(0, levelsOrdered.findIndex((l) => !completedByLevelId.get(l.id)));
+  const currentLevelOrder = levelsOrdered[currentIdx]?.order ?? 1;
+  const isLocked = lvlNum > currentLevelOrder;
 
   const stage: JourneyStageConfig = {
     id: journey.id,
     title: journey.title,
     weeksLabel: journey.description ?? "",
     accent: "amber",
-    status: "in_progress",
+    status: isLocked ? "locked" : "in_progress",
     imageUrl: "/images/metro.png",
     levels: [],
   };

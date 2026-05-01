@@ -57,7 +57,9 @@ export default function StageLevelMissionsClient({
             <div className="min-w-0">
               <div className="text-sm font-semibold">{stage.title} roadmap</div>
               <div className="mt-1 text-xs text-muted">
-                Complete missions to level up. A level completes at 3 / 6.
+                {isLocked
+                  ? "This level is locked. Finish the previous level to unlock missions."
+                  : "Complete missions to level up. A level completes at 3 / 6."}
               </div>
 
               <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-muted">
@@ -142,13 +144,6 @@ export default function StageLevelMissionsClient({
           </div>
         </div>
       </section>
-
-      <button
-        className="mt-4 w-full rounded-2xl bg-accent text-white py-3 text-sm font-semibold shadow-[0_12px_36px_rgba(109,40,217,0.28)] hover:brightness-105 active:brightness-95 transition"
-        type="button"
-      >
-        Log Progress
-      </button>
     </div>
   );
 }
