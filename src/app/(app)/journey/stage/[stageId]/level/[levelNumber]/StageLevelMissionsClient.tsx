@@ -117,6 +117,13 @@ export default function StageLevelMissionsClient({
                         <Circle className="h-5 w-5 text-muted" aria-hidden="true" />
                       )}
 
+                      {t.imageUrl ? (
+                        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-2xl bg-black/5 ring-1 ring-black/8">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={t.imageUrl} alt="" className="h-full w-full object-cover" />
+                        </div>
+                      ) : null}
+
                       <div className="min-w-0">
                         <div className="truncate text-sm font-medium">{t.title}</div>
                         <div className="mt-0.5 text-[11px] text-muted capitalize">{t.category}</div>

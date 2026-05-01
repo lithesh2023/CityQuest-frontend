@@ -3,6 +3,8 @@ import { getJourney, getLevel, getMission, getMyLevelProgress } from "@/lib/api/
 import { apiMissionToTaskConfig, levelToLevelConfig } from "@/lib/api/adapters";
 import type { JourneyStageConfig, JourneyTaskConfig } from "@/lib/journeyConfigTypes";
 import StageMissionClient from "./StageMissionClient";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export default async function StageMissionPage({
   params,
@@ -12,6 +14,9 @@ export default async function StageMissionPage({
   const { stageId, levelNumber, taskId } = await params;
   const lvlNum = Number(levelNumber);
   if (!Number.isFinite(lvlNum)) notFound();
+
+  const session = await getServerSession(authOptions);
+  const authToken = (session as unknown as { accessToken?: string | null })?.accessToken ?? null;
 
   let journey;
   try {
@@ -38,7 +43,7 @@ export default async function StageMissionPage({
 
   let progress = null;
   try {
-    progress = await getMyLevelProgress(level.id);
+    progress = await getMyLevelProgress(level.id, authToken);
   } catch {
     progress = null;
   }

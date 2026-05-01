@@ -56,6 +56,8 @@ export type Mission = {
   task_type?: string | null;
   xp?: number | null;
   geo_rule?: MissionGeoRule | null;
+  image_key?: string;
+  image_url?: string;
 };
 
 export type MyJourneyResponse = {
@@ -109,6 +111,8 @@ export type MissionDetailResponse = {
   task_type?: string | null;
   xp?: number | null;
   geo_rule?: MissionGeoRule | null;
+  image_key?: string;
+  image_url?: string;
 };
 
 export type ProgressLevel = {

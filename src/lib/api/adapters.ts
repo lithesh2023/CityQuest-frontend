@@ -39,7 +39,7 @@ export function apiMissionToTaskConfig(m: Mission | MissionDetailResponse, compl
     ...(location ? { location } : {}),
     completed,
     xp: m.xp ?? 100,
-    imageUrl: "/images/metro.png",
+    imageUrl: (m as any)?.image_url || "/images/metro.png",
     galleryUrls: [],
   };
 }
