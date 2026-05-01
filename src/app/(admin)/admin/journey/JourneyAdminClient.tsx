@@ -24,7 +24,7 @@ type AdminMission = {
 type AdminMissionUpdatePayload = Partial<
   Pick<
     AdminMission,
-    "title" | "description" | "address" | "task_type" | "xp" | "min_accuracy_m" | "time_window_sec" | "image_key"
+    "title" | "description" | "address" | "task_type" | "xp" | "min_accuracy_m" | "time_window_sec"
   >
 > & { geo_rule?: AdminMission["geo_rule"] | null; image_key?: string | null };
 
