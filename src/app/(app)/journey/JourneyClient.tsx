@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { JourneyTimeline } from "@/components/JourneyTimeline";
 import { useSelectedLocation } from "@/lib/useSelectedLocation";
 import { getMyJourneyForLocation, listLocations, selectMyLocation } from "@/lib/api/cityquest";
@@ -76,7 +76,14 @@ export default function JourneyClient() {
 
         if (!cancelled) setStages(mappedStages);
       } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Failed to load");
+        if (cancelled) return;
+        const status =
+          typeof e === "object" && e !== null && "status" in e ? (e as { status?: number }).status : undefined;
+        if (status === 401) {
+          await signOut({ callbackUrl: "/login?from=/journey" });
+          return;
+        }
+        setError(e instanceof Error ? e.message : "Failed to load");
       }
     }
 

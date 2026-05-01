@@ -1,5 +1,8 @@
 import Image from "next/image";
 import { Flame, Users, UtensilsCrossed } from "lucide-react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 function AvatarStack() {
   return (
@@ -32,7 +35,11 @@ function Card({
   );
 }
 
-export default function CommunityPage() {
+export default async function CommunityPage() {
+  const session = await getServerSession(authOptions);
+  const accessToken = (session as unknown as { accessToken?: string | null })?.accessToken ?? null;
+  if (!session || !accessToken) redirect("/login?from=/community");
+
   return (
     <div className="px-4 pt-6 pb-8 mx-auto max-w-md">
       <h1 className="text-xl font-semibold tracking-tight">Community</h1>

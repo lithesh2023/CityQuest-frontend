@@ -53,11 +53,19 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
+    // Include both the exact path and nested paths. Some Next.js versions do not
+    // match `/foo` when only `/foo/:path*` is listed.
+    "/home",
     "/home/:path*",
+    "/journey",
     "/journey/:path*",
+    "/map",
     "/map/:path*",
+    "/community",
     "/community/:path*",
+    "/profile",
     "/profile/:path*",
+    "/admin",
     "/admin/:path*",
   ],
 };

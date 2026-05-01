@@ -1,8 +1,15 @@
 import { MapClient } from "./MapClient";
 import Link from "next/link";
 import { ArrowLeft, SlidersHorizontal } from "lucide-react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-export default function MapPage() {
+export default async function MapPage() {
+  const session = await getServerSession(authOptions);
+  const accessToken = (session as unknown as { accessToken?: string | null })?.accessToken ?? null;
+  if (!session || !accessToken) redirect("/login?from=/map");
+
   return (
     <div className="mx-auto flex min-h-[100svh] max-w-md flex-col">
       <div className="px-4 pt-4">
