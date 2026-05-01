@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { AdminJourney, AdminJourneysResponse, AdminMissionUpdatePayload } from "@/app/(admin)/admin/journey/journeyAdminShared";
-import { FieldLabel, JourneyOrderInline, titleCaseId } from "@/app/(admin)/admin/journey/journeyAdminShared";
+import { FieldLabel, titleCaseId } from "@/app/(admin)/admin/journey/journeyAdminShared";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import {
   CreateLevelInline,
@@ -20,9 +20,25 @@ export default function JourneyAdminDetailClient({ journeyId }: { journeyId: str
   const [journey, setJourney] = useState<AdminJourney | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [savingOrderId, setSavingOrderId] = useState(false);
-  const [draftJourneyImageKey, setDraftJourneyImageKey] = useState<string | undefined>(undefined);
-  const [savingJourneyImage, setSavingJourneyImage] = useState(false);
+  const [isSavingJourney, setIsSavingJourney] = useState(false);
+
+  const [draft, setDraft] = useState<{
+    title: string;
+    description: string;
+    weeks_label: string;
+    accent: string;
+    status: string;
+    order: number;
+    image_key?: string;
+  }>({
+    title: "",
+    description: "",
+    weeks_label: "",
+    accent: "",
+    status: "active",
+    order: 1,
+    image_key: undefined,
+  });
 
   const listHref = locationSlug ? `/admin/journey?location=${encodeURIComponent(locationSlug)}` : "/admin/journey";
 
@@ -41,7 +57,17 @@ export default function JourneyAdminDetailClient({ journeyId }: { journeyId: str
       const json = (await res.json()) as AdminJourneysResponse;
       const j = json.journeys.find((x) => x.id === journeyId) ?? null;
       setJourney(j);
-      setDraftJourneyImageKey(j?.image_key);
+      if (j) {
+        setDraft({
+          title: j.title ?? "",
+          description: j.description ?? "",
+          weeks_label: j.weeks_label ?? "",
+          accent: j.accent ?? "",
+          status: j.status ?? "active",
+          order: typeof j.order === "number" ? j.order : 1,
+          image_key: j.image_key,
+        });
+      }
       if (!j) setError("This journey was not found for the selected location.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load");
@@ -54,24 +80,6 @@ export default function JourneyAdminDetailClient({ journeyId }: { journeyId: str
   useEffect(() => {
     void loadJourney();
   }, [loadJourney]);
-
-  async function updateJourneyOrder(order: number) {
-    setSavingOrderId(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/admin/journeys/${encodeURIComponent(journeyId)}`, {
-        method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ order }),
-      });
-      if (!res.ok) throw new Error(`Save journey order failed (${res.status})`);
-      await loadJourney();
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Save journey order failed");
-    } finally {
-      setSavingOrderId(false);
-    }
-  }
 
   async function createMission(levelId: string, payload: { title: string; task_type?: string; xp?: number; description?: string; address?: string }) {
     setError(null);
@@ -170,7 +178,14 @@ export default function JourneyAdminDetailClient({ journeyId }: { journeyId: str
   }
 
   const j = journey;
-  const journeyImageDirty = (draftJourneyImageKey ?? "") !== (j.image_key ?? "");
+  const dirty =
+    draft.title.trim() !== (j.title ?? "") ||
+    (draft.description.trim() || "") !== (j.description ?? "") ||
+    (draft.weeks_label.trim() || "") !== (j.weeks_label ?? "") ||
+    (draft.accent.trim() || "") !== (j.accent ?? "") ||
+    (draft.status || "active") !== (j.status ?? "active") ||
+    (Number(draft.order) || 1) !== (j.order ?? 1) ||
+    (draft.image_key ?? "") !== (j.image_key ?? "");
 
   return (
     <div className="space-y-6">
@@ -181,15 +196,6 @@ export default function JourneyAdminDetailClient({ journeyId }: { journeyId: str
           </Link>
           <h1 className="text-lg font-semibold tracking-tight truncate">{j.title}</h1>
           <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted">
-            <JourneyOrderInline
-              key={`${j.id}:${j.order}`}
-              journeyId={j.id}
-              order={j.order}
-              disabled={savingOrderId}
-              isSaving={savingOrderId}
-              onSave={updateJourneyOrder}
-            />
-            <span aria-hidden="true">•</span>
             <span>v{j.version}</span>
             <span aria-hidden="true">•</span>
             <span>{j.status ?? "active"}</span>
@@ -215,62 +221,128 @@ export default function JourneyAdminDetailClient({ journeyId }: { journeyId: str
       {error ? <div className="rounded-2xl bg-red-500/10 ring-1 ring-red-500/20 px-4 py-3 text-sm text-red-700">{error}</div> : null}
 
       <section className="rounded-3xl bg-card ring-1 ring-black/8 shadow-[0_12px_36px_rgba(109,40,217,0.06)] p-5 md:p-6 space-y-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="text-sm font-semibold">Edit journey</h2>
+            <p className="mt-1 text-xs text-muted">Update fields, then click Save journey.</p>
+          </div>
+          <button
+            type="button"
+            disabled={!dirty || isSavingJourney}
+            onClick={async () => {
+              setIsSavingJourney(true);
+              setError(null);
+              try {
+                const payload: Record<string, unknown> = {};
+                if (draft.title.trim() !== (j.title ?? "")) payload.title = draft.title.trim();
+
+                const desc = draft.description.trim();
+                if ((j.description ?? "") !== desc) payload.description = desc || null;
+
+                const wl = draft.weeks_label.trim();
+                if ((j.weeks_label ?? "") !== wl) payload.weeks_label = wl || null;
+
+                const acc = draft.accent.trim();
+                if ((j.accent ?? "") !== acc) payload.accent = acc || null;
+
+                const st = (draft.status || "active").trim();
+                if ((j.status ?? "active") !== st) payload.status = st;
+
+                const ord = Number(draft.order) || 1;
+                if ((j.order ?? 1) !== ord) payload.order = ord;
+
+                if ((draft.image_key ?? "") !== (j.image_key ?? "")) payload.image_key = draft.image_key ?? null;
+
+                const res = await fetch(`/api/admin/journeys/${encodeURIComponent(journeyId)}`, {
+                  method: "PATCH",
+                  headers: { "content-type": "application/json" },
+                  body: JSON.stringify(payload),
+                });
+                if (!res.ok) throw new Error(`Save journey failed (${res.status})`);
+                await loadJourney();
+              } catch (e) {
+                setError(e instanceof Error ? e.message : "Save journey failed");
+              } finally {
+                setIsSavingJourney(false);
+              }
+            }}
+            className={[
+              "rounded-2xl px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_36px_rgba(109,40,217,0.22)] transition",
+              !dirty || isSavingJourney ? "opacity-70 cursor-not-allowed bg-accent/70" : "bg-accent hover:brightness-105 active:brightness-95",
+            ].join(" ")}
+          >
+            {isSavingJourney ? "Saving…" : "Save journey"}
+          </button>
+        </div>
+
         <div className="grid gap-4 md:grid-cols-2">
+          <label className="block md:col-span-2">
+            <FieldLabel required>Title</FieldLabel>
+            <input
+              value={draft.title}
+              onChange={(e) => setDraft((d) => ({ ...d, title: e.target.value }))}
+              className="mt-1 w-full rounded-2xl bg-white/60 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
+            />
+          </label>
           <div>
             <FieldLabel>Description</FieldLabel>
-            <div className="mt-1 text-sm">{j.description ?? <span className="text-muted">—</span>}</div>
+            <textarea
+              value={draft.description}
+              onChange={(e) => setDraft((d) => ({ ...d, description: e.target.value }))}
+              rows={3}
+              className="mt-1 w-full rounded-2xl bg-white/60 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
+            />
           </div>
           <div>
             <FieldLabel>Weeks label</FieldLabel>
-            <div className="mt-1 text-sm">{j.weeks_label ?? <span className="text-muted">—</span>}</div>
+            <input
+              value={draft.weeks_label}
+              onChange={(e) => setDraft((d) => ({ ...d, weeks_label: e.target.value }))}
+              className="mt-1 w-full rounded-2xl bg-white/60 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
+            />
           </div>
           <div>
             <FieldLabel>Accent</FieldLabel>
-            <div className="mt-1 text-sm">{j.accent ?? <span className="text-muted">—</span>}</div>
+            <input
+              value={draft.accent}
+              onChange={(e) => setDraft((d) => ({ ...d, accent: e.target.value }))}
+              className="mt-1 w-full rounded-2xl bg-white/60 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
+              placeholder="e.g. green / amber / purple"
+            />
+          </div>
+          <div>
+            <FieldLabel>Status</FieldLabel>
+            <select
+              value={draft.status}
+              onChange={(e) => setDraft((d) => ({ ...d, status: e.target.value }))}
+              className="mt-1 w-full rounded-2xl bg-white/60 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
+            >
+              <option value="active">active</option>
+              <option value="inactive">inactive</option>
+              <option value="draft">draft</option>
+            </select>
+          </div>
+          <div>
+            <FieldLabel>Order</FieldLabel>
+            <input
+              value={String(draft.order)}
+              onChange={(e) => setDraft((d) => ({ ...d, order: Number(e.target.value) || 1 }))}
+              inputMode="numeric"
+              className="mt-1 w-full rounded-2xl bg-white/60 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
+            />
           </div>
           <div>
             <FieldLabel>Journey image</FieldLabel>
             <div className="mt-2">
               <ImageUploadField
                 label="Upload"
-                value={draftJourneyImageKey}
+                value={draft.image_key}
                 previewUrl={j.image_url}
                 locationSlug={locationSlug}
-                onChange={setDraftJourneyImageKey}
-                helpText="Upload a new journey image. Click Save to persist."
-                disabled={savingJourneyImage || savingOrderId}
+                onChange={(next) => setDraft((d) => ({ ...d, image_key: next }))}
+                helpText="Upload a new journey image and click Save journey."
+                disabled={isSavingJourney}
               />
-              <div className="mt-3 flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  disabled={!journeyImageDirty || savingJourneyImage || savingOrderId}
-                  onClick={async () => {
-                    setSavingJourneyImage(true);
-                    setError(null);
-                    try {
-                      const res = await fetch(`/api/admin/journeys/${encodeURIComponent(journeyId)}`, {
-                        method: "PATCH",
-                        headers: { "content-type": "application/json" },
-                        body: JSON.stringify({ image_key: draftJourneyImageKey ?? null }),
-                      });
-                      if (!res.ok) throw new Error(`Save journey image failed (${res.status})`);
-                      await loadJourney();
-                    } catch (e) {
-                      setError(e instanceof Error ? e.message : "Save journey image failed");
-                    } finally {
-                      setSavingJourneyImage(false);
-                    }
-                  }}
-                  className={[
-                    "rounded-2xl px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_36px_rgba(109,40,217,0.22)] transition",
-                    !journeyImageDirty || savingJourneyImage || savingOrderId
-                      ? "opacity-70 cursor-not-allowed bg-accent/70"
-                      : "bg-accent hover:brightness-105 active:brightness-95",
-                  ].join(" ")}
-                >
-                  {savingJourneyImage ? "Saving…" : "Save image"}
-                </button>
-              </div>
             </div>
           </div>
         </div>
