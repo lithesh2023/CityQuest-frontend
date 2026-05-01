@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
-import { CheckCircle2, Upload } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Camera, CheckCircle2, Images, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import type {
   JourneyLevelConfig,
@@ -34,8 +34,109 @@ export default function StageMissionClient({
   const { locationSlug } = useSelectedLocation();
   const [completedIds, setCompletedIds] = useState<Set<string>>(() => getCompletedTaskIds());
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [proofPreviewUrl, setProofPreviewUrl] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const galleryInputRef = useRef<HTMLInputElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const cameraStreamRef = useRef<MediaStream | null>(null);
+
+  const closeCameraModal = useCallback(() => {
+    cameraStreamRef.current?.getTracks().forEach((t) => t.stop());
+    cameraStreamRef.current = null;
+    const v = videoRef.current;
+    if (v) v.srcObject = null;
+    setCameraOpen(false);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      cameraStreamRef.current?.getTracks().forEach((t) => t.stop());
+      cameraStreamRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!cameraOpen) return;
+    const v = videoRef.current;
+    const s = cameraStreamRef.current;
+    if (v && s) v.srcObject = s;
+  }, [cameraOpen]);
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setProofPreviewUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(selectedFile);
+    setProofPreviewUrl(url);
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [selectedFile]);
+
+  async function openDeviceCamera() {
+    setError(null);
+    if (isLocked || isSubmitting) return;
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setError("Camera is not supported in this browser. Try Gallery instead.");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" }, width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: false,
+      });
+      cameraStreamRef.current = stream;
+      setCameraOpen(true);
+    } catch (e) {
+      const name = e instanceof DOMException ? e.name : "";
+      if (name === "NotAllowedError" || name === "PermissionDeniedError") {
+        setError("Camera permission was denied. Allow camera access or use Gallery.");
+      } else if (name === "NotFoundError" || name === "DevicesNotFoundError") {
+        setError("No camera found on this device.");
+      } else {
+        setError("Could not open the camera.");
+      }
+    }
+  }
+
+  function captureFromVideo() {
+    const video = videoRef.current;
+    if (!video || video.readyState < 2) {
+      setError("Camera is not ready yet. Wait a moment and try again.");
+      return;
+    }
+    const w = video.videoWidth;
+    const h = video.videoHeight;
+    if (!w || !h) {
+      setError("Camera preview has no size yet. Try again.");
+      return;
+    }
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      setError("Could not capture image.");
+      return;
+    }
+    ctx.drawImage(video, 0, 0, w, h);
+    canvas.toBlob(
+      (blob) => {
+        if (!blob) {
+          setError("Could not encode photo.");
+          return;
+        }
+        const file = new File([blob], `camera-${Date.now()}.jpg`, { type: "image/jpeg" });
+        onPickImage(file);
+        closeCameraModal();
+      },
+      "image/jpeg",
+      0.92,
+    );
+  }
 
   const isLocked = stage.status === "locked";
   const done = isTaskCompleted(task, completedIds);
@@ -67,6 +168,22 @@ export default function StageMissionClient({
     };
   }
 
+  function onPickImage(file: File | null) {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setError("Please choose an image file.");
+      return;
+    }
+    setError(null);
+    setSelectedFile(file);
+  }
+
+  function clearSelectedProof() {
+    if (isLocked || isSubmitting) return;
+    setSelectedFile(null);
+    setError(null);
+  }
+
   async function onSubmitProof() {
     setError(null);
     if (isLocked) return;
@@ -85,8 +202,8 @@ export default function StageMissionClient({
         locationSlug,
         {
           purpose: "mission_proof",
-          content_type: selectedFile.type || "application/octet-stream",
-          file_name: selectedFile.name || "proof",
+          content_type: selectedFile.type || "image/jpeg",
+          file_name: selectedFile.name?.trim() || `proof-${Date.now()}.jpg`,
           size_bytes: selectedFile.size,
         },
         authToken,
@@ -195,18 +312,89 @@ export default function StageMissionClient({
 
           <div className="mt-5">
             <div className="text-sm font-semibold">Proof photo</div>
-            <div className="mt-2 flex items-center justify-between gap-3">
-              <input
-                type="file"
-                accept="image/*"
-                className="block w-full text-xs text-muted file:mr-3 file:rounded-xl file:border-0 file:bg-black/5 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-foreground hover:file:bg-black/10"
-                onChange={(e) => setSelectedFile(e.target.files?.[0] ?? null)}
+            <p className="mt-1 text-xs text-muted">
+              Add a photo from your gallery, or open the live camera to take a picture.
+            </p>
+
+            <input
+              ref={galleryInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              tabIndex={-1}
+              disabled={isLocked || isSubmitting}
+              onChange={(e) => {
+                const f = e.target.files?.[0] ?? null;
+                e.target.value = "";
+                onPickImage(f);
+              }}
+            />
+
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <button
+                type="button"
                 disabled={isLocked || isSubmitting}
-              />
+                onClick={() => galleryInputRef.current?.click()}
+                className={[
+                  "inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-semibold ring-1 transition",
+                  "bg-card text-foreground ring-black/10 hover:bg-black/4",
+                  isLocked || isSubmitting ? "opacity-60 cursor-not-allowed" : "",
+                ].join(" ")}
+                aria-label="Choose photo from device"
+              >
+                <Images className="h-5 w-5 text-accent" aria-hidden="true" />
+                <span>Gallery</span>
+              </button>
+              <button
+                type="button"
+                disabled={isLocked || isSubmitting}
+                onClick={() => void openDeviceCamera()}
+                className={[
+                  "inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-sm font-semibold ring-1 transition",
+                  "bg-card text-foreground ring-black/10 hover:bg-black/4",
+                  isLocked || isSubmitting ? "opacity-60 cursor-not-allowed" : "",
+                ].join(" ")}
+                aria-label="Open camera"
+              >
+                <Camera className="h-5 w-5 text-accent" aria-hidden="true" />
+                <span>Camera</span>
+              </button>
             </div>
+
+            {proofPreviewUrl ? (
+              <div className="mt-3 overflow-hidden rounded-2xl bg-black/5 ring-1 ring-black/8">
+                <img
+                  src={proofPreviewUrl}
+                  alt="Preview of your proof photo"
+                  className="mx-auto max-h-64 w-full object-contain"
+                />
+              </div>
+            ) : null}
+
             {selectedFile ? (
-              <div className="mt-2 text-[11px] text-muted truncate">
-                Selected: <span className="font-semibold text-foreground">{selectedFile.name}</span>
+              <div className="mt-2 flex items-center justify-between gap-3">
+                <div className="min-w-0 text-[11px] text-muted">
+                  <span className="block truncate">
+                    Selected:{" "}
+                    <span className="font-semibold text-foreground">
+                      {selectedFile.name?.trim() || "Camera capture"}
+                    </span>
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  disabled={isLocked || isSubmitting}
+                  onClick={clearSelectedProof}
+                  className={[
+                    "inline-flex shrink-0 items-center gap-1 rounded-xl px-2.5 py-1.5 text-xs font-semibold ring-1 transition",
+                    "bg-card text-red-700 ring-red-500/20 hover:bg-red-500/8",
+                    isLocked || isSubmitting ? "opacity-60 cursor-not-allowed" : "",
+                  ].join(" ")}
+                  aria-label="Remove selected photo"
+                >
+                  <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                  Remove
+                </button>
               </div>
             ) : null}
           </div>
@@ -219,25 +407,13 @@ export default function StageMissionClient({
 
           <button
             type="button"
-            disabled={isLocked || isSubmitting}
-            className={[
-              "mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-accent py-3 text-sm font-semibold text-white shadow-[0_12px_36px_rgba(109,40,217,0.28)] transition",
-              isLocked ? "opacity-60 cursor-not-allowed" : "hover:brightness-105 active:brightness-95",
-            ].join(" ")}
-          >
-            <Upload className="h-4 w-4" aria-hidden="true" />
-            {selectedFile ? "Photo selected" : "Choose Photo"}
-          </button>
-
-          <button
-            type="button"
             disabled={isLocked || done || isSubmitting}
             onClick={onSubmitProof}
             className={[
-              "mt-3 w-full rounded-2xl py-2 text-sm font-semibold ring-1 transition",
+              "mt-6 w-full rounded-2xl py-3 text-sm font-semibold transition",
               done
-                ? "bg-emerald-500/12 text-emerald-700 ring-emerald-500/20 cursor-default"
-                : "bg-black/0 text-accent-2 ring-transparent hover:bg-black/5 hover:ring-black/8",
+                ? "bg-emerald-500/12 text-emerald-700 ring-1 ring-emerald-500/20 cursor-default"
+                : "bg-accent text-white shadow-[0_12px_36px_rgba(109,40,217,0.28)] hover:brightness-105 active:brightness-95",
               isLocked ? "opacity-60 cursor-not-allowed" : "",
             ].join(" ")}
           >
@@ -245,6 +421,44 @@ export default function StageMissionClient({
           </button>
         </div>
       </section>
+
+      {cameraOpen ? (
+        <div
+          className="fixed inset-0 z-[100] flex items-end justify-center bg-black/70 p-4 sm:items-center"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Take proof photo"
+        >
+          <div className="w-full max-w-md overflow-hidden rounded-3xl bg-card shadow-[0_18px_60px_rgba(0,0,0,0.35)] ring-1 ring-black/15">
+            <div className="border-b border-black/8 px-4 py-3 text-sm font-semibold">Camera</div>
+            <div className="p-4">
+              <video
+                ref={videoRef}
+                className="aspect-video w-full rounded-2xl bg-black object-cover"
+                autoPlay
+                playsInline
+                muted
+              />
+              <div className="mt-4 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  className="rounded-2xl bg-black/5 py-3 text-sm font-semibold ring-1 ring-black/10 hover:bg-black/8"
+                  onClick={closeCameraModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="rounded-2xl bg-accent py-3 text-sm font-semibold text-white shadow-[0_12px_36px_rgba(109,40,217,0.28)] hover:brightness-105"
+                  onClick={captureFromVideo}
+                >
+                  Use photo
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }

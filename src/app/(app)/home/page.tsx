@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth";
 import { Bell } from "lucide-react";
 import { authOptions } from "@/lib/auth";
 import { AutoRickshawFloat } from "@/components/AutoRickshawFloat";
-import { getJourney, getLevel, getMyLevelProgress, getMyProgressSummary, listJourneys } from "@/lib/api/cityquest";
+import { getMySummary } from "@/lib/api/cityquest";
 import { redirect } from "next/navigation";
 
 function cityArtForLevel(levelNumber: number) {
@@ -35,82 +35,44 @@ function ProgressDots({ completed, total }: { completed: number; total: number }
   );
 }
 
+const DEFAULT_LOCATION_SLUG = process.env.NEXT_PUBLIC_DEFAULT_LOCATION_SLUG ?? "bangalore";
+
 export default async function HomeDashboardPage() {
   const session = await getServerSession(authOptions);
   const accessToken = (session as unknown as { accessToken?: string | null })?.accessToken ?? null;
   if (!session || !accessToken) redirect("/login?from=/home");
 
-  let journeyId: string | null = null;
-  let journeyTitle = "Your Journey";
-  let journeyDescription = "Continue exploring.";
-
-  let levelOrder = 1;
-  let levelTitle = `Level ${levelOrder}`;
-  let levelProgressCompleted = 0;
-  let levelProgressTotal = 0;
-
-  let progressSummary: Awaited<ReturnType<typeof getMyProgressSummary>> | null = null;
-
+  let summary = null as Awaited<ReturnType<typeof getMySummary>> | null;
   try {
-    const listed = await listJourneys();
-    const first = listed.items?.[0];
-    if (first?.id) {
-      journeyId = first.id;
-      journeyTitle = first.title;
-      journeyDescription = first.description ?? journeyDescription;
-
-      const journey = await getJourney(first.id);
-      journeyTitle = journey.title;
-      journeyDescription = journey.description ?? journeyDescription;
-
-      progressSummary = await getMyProgressSummary(first.id).catch(() => null);
-
-      const levels = journey.levels ?? [];
-      const progressLevels = progressSummary?.levels ?? [];
-
-      const best =
-        progressLevels.find((l) => l.status === "in_progress") ??
-        progressLevels.find((l) => l.status !== "completed") ??
-        progressLevels[0];
-
-      const matchedLevelMeta = best ? levels.find((l) => l.id === best.level_id) : levels[0];
-      const chosenMeta = matchedLevelMeta ?? levels[0];
-
-      levelOrder = chosenMeta?.order ?? 1;
-      levelTitle = chosenMeta?.title ?? `Level ${levelOrder}`;
-
-      if (chosenMeta?.id) {
-        const lvl = await getLevel(chosenMeta.id);
-        levelProgressTotal = lvl.missions?.length ?? chosenMeta.mission_count ?? 0;
-
-        let completed = 0;
-        try {
-          const lp = await getMyLevelProgress(chosenMeta.id);
-          completed = lp.missions?.filter((m) => m.status === "completed").length ?? 0;
-        } catch {
-          completed = 0;
-        }
-
-        levelProgressCompleted = completed;
-      }
-    }
+    summary = await getMySummary(DEFAULT_LOCATION_SLUG, accessToken);
   } catch {
-    // ignore and fall back to dummy-ish UI below
+    summary = null;
   }
 
-  const userName = session?.user?.name ?? "Explorer";
+  const userName = summary?.user?.name ?? session?.user?.name ?? "Explorer";
+  const cur = summary?.current;
 
-  const weeksCompleted = progressSummary?.levels?.filter((l) => l.status === "completed").length ?? 0;
-  const missionsDone = levelProgressCompleted;
-  const badgesEarned = 5;
+  const journeyTitle = cur?.journey_title ?? "Your Journey";
+  const journeyDescription =
+    cur?.weeks_label ?? cur?.journey_description ?? "Continue exploring.";
 
-  const xp = 1200;
-  const xpMax = 2000;
-  const xpPct = Math.min(100, (xp / xpMax) * 100);
-  const art = cityArtForLevel(levelOrder);
-  const weekCompleted = levelProgressCompleted;
-  const weekTotal = Math.max(1, levelProgressTotal || 5);
+  const levelOrder = cur?.level_order ?? 1;
+  const levelTitle = cur?.level_display ?? `Level ${levelOrder}`;
+
+  const weekCompleted = cur?.missions_completed ?? 0;
+  const weekTotal = Math.max(1, cur?.missions_total ?? 1);
   const weekPct = Math.min(100, (weekCompleted / weekTotal) * 100);
+
+  const weeksCompleted = summary?.macro.completed_stages ?? 0;
+  const missionsDone = summary?.progress.distinct_missions_completed ?? 0;
+  const badgesEarned = 0;
+
+  const xp = cur?.xp_completed_this_level ?? 0;
+  const xpMax = Math.max(1, cur?.xp_total_this_level ?? 1);
+  const xpPct = Math.min(100, (xp / xpMax) * 100);
+
+  const art = cityArtForLevel(levelOrder);
+  const journeyId = cur?.journey_id ?? null;
 
   return (
     <div className="mx-auto max-w-md px-4 pt-6 pb-8">
@@ -128,31 +90,30 @@ export default async function HomeDashboardPage() {
         </button>
       </header>
 
+      {summary && !summary.assigned ? (
+        <div className="mt-3 rounded-2xl bg-amber-500/10 ring-1 ring-amber-500/20 px-4 py-3 text-xs text-amber-900">
+          Choose your city on <Link href="/journey" className="font-semibold underline">Journey</Link> to sync
+          progress for <span className="font-semibold">{summary.location.name}</span>.
+        </div>
+      ) : null}
+
       <section className="mt-4 rounded-3xl overflow-hidden shadow-[0_18px_60px_rgba(109,40,217,0.16)] ring-1 ring-black/8">
         <div className="relative h-28 bg-gradient-to-r from-accent to-indigo-600">
           <div className="absolute inset-0 opacity-25 [background:radial-gradient(circle_at_25%_20%,white,transparent_55%),radial-gradient(circle_at_80%_0%,white,transparent_60%)]" />
           <div className="absolute inset-0 px-5 py-4 flex items-center justify-between gap-4">
             <div className="text-white min-w-0">
               <div className="text-sm font-semibold">Explorer</div>
-              <div className="mt-0.5 text-xs text-white/85">{levelTitle}</div>
+              <div className="mt-0.5 text-xs text-white/85 truncate">{levelTitle}</div>
               <div className="mt-3 text-[11px] text-white/85">
-                {xp} / {xpMax} XP
+                {xp} / {xpMax} XP (this level)
               </div>
               <div className="mt-1 h-2 w-40 rounded-full bg-white/25 overflow-hidden">
-                <div
-                  className="h-full bg-white"
-                  style={{ width: `${xpPct}%` }}
-                />
+                <div className="h-full bg-white" style={{ width: `${xpPct}%` }} />
               </div>
             </div>
 
             <div className="relative h-20 w-28 shrink-0">
-              <Image
-                src={art.src}
-                alt={art.alt}
-                fill
-                className="object-cover rounded-2xl"
-              />
+              <Image src={art.src} alt={art.alt} fill className="object-cover rounded-2xl" />
               <div className="absolute inset-0 rounded-2xl ring-1 ring-white/20" />
             </div>
           </div>
@@ -162,9 +123,9 @@ export default async function HomeDashboardPage() {
       <section className="mt-4 rounded-3xl bg-card ring-1 ring-black/8 shadow-[0_12px_36px_rgba(109,40,217,0.08)]">
         <div className="grid grid-cols-3 divide-x divide-black/5">
           {[
-            { label: "Weeks Completed", value: weeksCompleted },
-            { label: "Missions Done", value: missionsDone },
-            { label: "Badges Earned", value: badgesEarned },
+            { label: "Stages done", value: weeksCompleted },
+            { label: "Missions done", value: missionsDone },
+            { label: "Badges", value: badgesEarned },
           ].map((s) => (
             <div key={s.label} className="px-3 py-4 text-center">
               <div className="text-lg font-semibold">{s.value}</div>
@@ -180,9 +141,7 @@ export default async function HomeDashboardPage() {
           <div className="mt-2 flex items-start justify-between gap-4">
             <div className="min-w-0">
               <div className="text-sm font-semibold truncate">{journeyTitle}</div>
-              <div className="mt-1 text-xs text-muted">
-                {journeyDescription}
-              </div>
+              <div className="mt-1 text-xs text-muted">{journeyDescription}</div>
             </div>
             <AutoRickshawFloat />
           </div>
@@ -195,10 +154,7 @@ export default async function HomeDashboardPage() {
           </div>
 
           <div className="mt-3 h-2.5 rounded-full bg-black/5 ring-1 ring-black/8 overflow-hidden">
-            <div
-              className="h-full bg-emerald-500"
-              style={{ width: `${weekPct}%` }}
-            />
+            <div className="h-full bg-emerald-500" style={{ width: `${weekPct}%` }} />
           </div>
         </div>
 
@@ -213,4 +169,3 @@ export default async function HomeDashboardPage() {
     </div>
   );
 }
-

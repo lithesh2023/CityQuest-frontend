@@ -185,6 +185,67 @@ export async function getMyJourneyForLocation(location: string, authToken?: stri
   });
 }
 
+export type MySummaryResponse = {
+  user: { id: string; name: string | null; email: string | null };
+  location: { id: string; slug: string; name: string };
+  assigned: boolean;
+  macro: { completed_stages: number; total_stages: number };
+  progress: {
+    distinct_missions_completed: number;
+    xp_from_completed_missions: number;
+    accepted_submissions_total: number;
+    geo_missions_completed: number;
+    xp_ceiling_location: number;
+  };
+  geo: { distance_walked_m: number };
+  current: null | {
+    journey_id: string;
+    journey_title: string;
+    journey_description: string;
+    weeks_label?: string;
+    level_id: string;
+    level_order: number;
+    level_title: string;
+    level_display: string;
+    missions_total: number;
+    missions_completed: number;
+    min_completion_ratio: number;
+    xp_completed_this_level: number;
+    xp_total_this_level: number;
+  };
+};
+
+export async function getMySummary(location: string, authToken?: string | null) {
+  return apiFetch<MySummaryResponse>(`/v1/me/summary?location=${encodeURIComponent(location)}`, {
+    authToken,
+  });
+}
+
+export type MapCompletionItem = {
+  submission_id: string;
+  mission_id: string;
+  mission_title: string;
+  mission_address?: string | null;
+  lat: number;
+  lng: number;
+  accuracy_m?: number | null;
+  captured_at?: string | null;
+  submitted_at: string;
+  level_order: number;
+  journey_title: string;
+};
+
+export type MapCompletionsResponse = {
+  location: { id: string; slug: string; name: string };
+  items: MapCompletionItem[];
+};
+
+export async function getMyMapCompletions(location: string, authToken?: string | null) {
+  return apiFetch<MapCompletionsResponse>(`/v1/me/map-completions?location=${encodeURIComponent(location)}`, {
+    authToken,
+  });
+}
+
 export async function getJourney(journeyId: string): Promise<JourneyDetailResponse> {
   return apiFetch<JourneyDetailResponse>(`/v1/journeys/${encodeURIComponent(journeyId)}`);
 }
