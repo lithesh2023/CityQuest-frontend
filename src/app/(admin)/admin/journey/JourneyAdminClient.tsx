@@ -41,6 +41,7 @@ type AdminLevel = {
 type AdminJourney = {
   id: string;
   title: string;
+  order: number;
   description?: string;
   weeks_label?: string;
   accent?: string;
@@ -94,10 +95,26 @@ export default function JourneyAdminClient() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCreatingJourney, setIsCreatingJourney] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [savingJourneyOrderId, setSavingJourneyOrderId] = useState<string | null>(null);
 
   const selectedLocationName = useMemo(() => {
     return locations.find((l) => l.slug === selectedLocationSlug)?.name ?? titleCaseId(selectedLocationSlug);
   }, [locations, selectedLocationSlug]);
+
+  const sortedJourneys = useMemo(() => {
+    return [...journeys].sort((a, b) => {
+      const ao = typeof a.order === "number" ? a.order : 0;
+      const bo = typeof b.order === "number" ? b.order : 0;
+      if (ao !== bo) return ao - bo;
+      if (a.is_current !== b.is_current) return a.is_current ? -1 : 1;
+      return (b.version ?? 0) - (a.version ?? 0);
+    });
+  }, [journeys]);
+
+  const suggestedNewJourneyOrder = useMemo(() => {
+    const max = sortedJourneys.reduce((m, j) => (typeof j.order === "number" ? Math.max(m, j.order) : m), 0);
+    return max + 1;
+  }, [sortedJourneys]);
 
   useEffect(() => {
     let cancelled = false;
@@ -166,6 +183,7 @@ export default function JourneyAdminClient() {
 
   async function onCreateJourney(payload: {
     title: string;
+    order: number;
     description?: string;
     weeks_label?: string;
     accent?: string;
@@ -207,6 +225,22 @@ export default function JourneyAdminClient() {
     if (listRes.ok) {
       const json = (await listRes.json()) as AdminJourneysResponse;
       setJourneys(json.journeys ?? []);
+    }
+  }
+
+  async function updateJourneyOrder(journeyId: string, order: number) {
+    setError(null);
+    setSavingJourneyOrderId(journeyId);
+    try {
+      const res = await fetch(`/api/admin/journeys/${encodeURIComponent(journeyId)}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ order }),
+      });
+      if (!res.ok) throw new Error(`Save journey order failed (${res.status})`);
+      await refreshJourneys();
+    } finally {
+      setSavingJourneyOrderId((cur) => (cur === journeyId ? null : cur));
     }
   }
 
@@ -343,12 +377,13 @@ export default function JourneyAdminClient() {
 
       <CreateJourneyCard
         locationSlug={selectedLocationSlug}
+        suggestedOrder={suggestedNewJourneyOrder}
         onCreate={onCreateJourney}
         isCreating={isCreatingJourney}
       />
 
       <div className="space-y-3">
-        {journeys.map((j) => (
+        {sortedJourneys.map((j) => (
           <section
             key={j.id}
             className="overflow-hidden rounded-3xl bg-card ring-1 ring-black/8 shadow-[0_12px_36px_rgba(109,40,217,0.08)]"
@@ -359,6 +394,21 @@ export default function JourneyAdminClient() {
                   <div className="text-xs text-muted font-semibold">Journey</div>
                   <div className="mt-0.5 text-sm font-semibold truncate">{j.title}</div>
                   <div className="mt-1 text-[11px] text-muted">
+                    <JourneyOrderInline
+                      key={`${j.id}:${j.order}`}
+                      journeyId={j.id}
+                      order={j.order}
+                      disabled={Boolean(savingJourneyOrderId)}
+                      isSaving={savingJourneyOrderId === j.id}
+                      onSave={async (nextOrder) => {
+                        try {
+                          await updateJourneyOrder(j.id, nextOrder);
+                        } catch (e) {
+                          setError(e instanceof Error ? e.message : "Save journey order failed");
+                        }
+                      }}
+                    />{" "}
+                    •{" "}
                     v{j.version} • {j.status ?? "active"}{" "}
                     {j.is_current ? (
                       <span className="ml-2 rounded-full bg-accent/15 text-accent ring-1 ring-accent/25 px-2 py-0.5 font-semibold">
@@ -500,8 +550,10 @@ export default function JourneyAdminClient() {
 
 function CreateJourneyCard(props: {
   locationSlug: string;
+  suggestedOrder: number;
   onCreate: (payload: {
     title: string;
+    order: number;
     description?: string;
     weeks_label?: string;
     accent?: string;
@@ -512,6 +564,7 @@ function CreateJourneyCard(props: {
   isCreating: boolean;
 }) {
   const [title, setTitle] = useState("");
+  const [order, setOrder] = useState<number>(props.suggestedOrder);
   const [description, setDescription] = useState("");
   const [weeksLabel, setWeeksLabel] = useState("");
   const [accent, setAccent] = useState("");
@@ -535,6 +588,18 @@ function CreateJourneyCard(props: {
             onChange={(e) => setTitle(e.target.value)}
             className="mt-1 w-full rounded-2xl bg-white/60 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
           />
+        </label>
+
+        <label className="block">
+          <FieldLabel required>Order</FieldLabel>
+          <input
+            value={String(order)}
+            onChange={(e) => setOrder(Number(e.target.value) || 1)}
+            inputMode="numeric"
+            className="mt-1 w-full rounded-2xl bg-white/60 ring-1 ring-black/10 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-accent/40"
+            placeholder="1 = first journey"
+          />
+          <div className="mt-1 text-[11px] text-muted">Used to sort journeys (1 = first, bigger = later).</div>
         </label>
 
         <label className="block">
@@ -602,10 +667,11 @@ function CreateJourneyCard(props: {
       <div className="mt-4 flex items-center justify-end gap-2">
         <button
           type="button"
-          disabled={props.isCreating || !title.trim()}
+          disabled={props.isCreating || !title.trim() || !Number.isFinite(order) || order < 1}
           onClick={() =>
             props.onCreate({
               title: title.trim(),
+              order,
               description: description.trim() || undefined,
               weeks_label: weeksLabel.trim() || undefined,
               accent: accent.trim() || undefined,
@@ -617,13 +683,87 @@ function CreateJourneyCard(props: {
           className={cx(
             "rounded-2xl px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_36px_rgba(109,40,217,0.22)] transition",
             "bg-accent hover:brightness-105 active:brightness-95",
-            (props.isCreating || !title.trim()) && "opacity-70 cursor-not-allowed",
+            (props.isCreating || !title.trim() || !Number.isFinite(order) || order < 1) && "opacity-70 cursor-not-allowed",
           )}
         >
           {props.isCreating ? "Creating…" : "Create journey"}
         </button>
       </div>
     </section>
+  );
+}
+
+function JourneyOrderInline(props: {
+  journeyId: string;
+  order: number;
+  disabled?: boolean;
+  isSaving?: boolean;
+  onSave: (order: number) => Promise<void>;
+}) {
+  const [value, setValue] = useState<string>(String(props.order));
+  const [open, setOpen] = useState(false);
+
+  const parsed = Number(value);
+  const valid = Number.isFinite(parsed) && parsed >= 1;
+  const dirty = value.trim() !== String(props.order);
+
+  return (
+    <span className="inline-flex items-center gap-1">
+      <span className="font-semibold">Order</span>{" "}
+      {!open ? (
+        <>
+          <span>{props.order}</span>
+          <button
+            type="button"
+            disabled={props.disabled}
+            onClick={() => setOpen(true)}
+            className={cx(
+              "ml-1 rounded-full bg-black/4 px-2 py-0.5 text-[11px] font-semibold text-muted ring-1 ring-black/8 hover:bg-black/6 transition",
+              props.disabled && "opacity-70 cursor-not-allowed",
+            )}
+          >
+            Edit
+          </button>
+        </>
+      ) : (
+        <>
+          <input
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            inputMode="numeric"
+            className="w-16 rounded-xl bg-white/70 ring-1 ring-black/10 px-2 py-1 text-[11px] outline-none focus:ring-2 focus:ring-accent/40"
+          />
+          <button
+            type="button"
+            disabled={props.isSaving}
+            onClick={() => {
+              setValue(String(props.order));
+              setOpen(false);
+            }}
+            className={cx(
+              "rounded-full bg-black/4 px-2 py-0.5 text-[11px] font-semibold text-muted ring-1 ring-black/8 hover:bg-black/6 transition",
+              props.isSaving && "opacity-70 cursor-not-allowed",
+            )}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            disabled={!dirty || !valid || props.isSaving}
+            onClick={async () => {
+              await props.onSave(Math.trunc(parsed));
+              setOpen(false);
+            }}
+            className={cx(
+              "rounded-full bg-accent/15 text-accent ring-1 ring-accent/25 px-2 py-0.5 text-[11px] font-semibold transition",
+              !dirty || !valid || props.isSaving ? "opacity-60 cursor-not-allowed" : "hover:brightness-105 active:brightness-95",
+            )}
+          >
+            {props.isSaving ? "Saving…" : "Save"}
+          </button>
+        </>
+      )}
+    </span>
   );
 }
 
